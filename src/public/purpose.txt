@@ -1,0 +1,2 @@
+PURPOSE OF THE public FOLDER
+- Contains all the static assets for your application, such as images.

@@ -1,0 +1,39 @@
+VIEW SWITCHING
+- On netflix, the URLS are as follows:
+    - Front page: www.netflix.com/browse
+    - Series/Movies/Subgenres page: www.netflix.com/browse/genre/<code number>
+        - Series en Movies hebben een uniek nummer, elk subgenre ook.
+        - Voor de experimentomgeving is het waarschijnlijk prima om de routes gewoon 'series' en 'movies' te noemen.
+- Hovering over an item does not change the URL, clicking on the arrow for more details does.
+    - When the arrow is clicked, a variable value is added to the URL that contains the ID number of the item
+
+- Amazon Prime does not allow a pop-up component for more details, and instead redirects to the following URL
+    www.primevideo.com/detail/<item ID?>/<No idea what this is> to present the details
+
+- HBO Max has the following URLs:
+    - Front page: www.play.max.com
+    - Series page: www.play.max.com/series
+    - Movies page: www.play.max.com/movies
+    - Specific show: www.play.max.com/show/<show ID>
+    - Specific movie: www.play.max.com/movie/<movie ID>
+    - Subgenre: www.play.max.com/<movies or series>?tab=<genre ID>
+        - Note that the genre identifier is saved as a URL variable.
+        - The genre ID differentiates between series and movies
+        - Template genre ID: ?tab=<movies or series>-page-tab-emea-<genre name>
+
+- HBO Max also does not work with the pop-up component for more details like Netflix, and rather uses the same
+    type of approach as Amazon Prime does.
+
+
+BASED ON INFORMATION ABOVE, THE FOLLOWING OTT-RELATED VIEWS ARE PROPOSED:
+- Front page: www.testflix.com
+- Series page: www.testflix.com/series
+- Movies page: www.testflix.com/movies
+- Specific show: www.testflix.com?<show ID> | www.testflix.com/<series or movies>/<show ID>
+- Search page: www.testflix.com/search?q=<query>
+    - Consider the possibilities performance-wise on how to implement this. Specifically these two options:
+        1. (Netflix) Go to page if search bar has non-whitespace content, return to previous non-search page when search bar goes empty again.
+        2. (HBO Max) Go to search page by clicking on search icon, then allow user to use queries. User will have to navigate to previous page
+            manually to get back to the page they were at before clicking hte search icon.
+
+- More details should be implemented through a pop-up component rather than a page change for performance.
