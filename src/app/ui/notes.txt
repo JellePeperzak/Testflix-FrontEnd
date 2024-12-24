@@ -1,3 +1,8 @@
+COLOR CODES OF NETFLIX:
+- Background General: #141414
+- Background Item Card: 181818
+
+
 CONDITIONAL STYLING
     - If for some reason there are issues with conditional styling, consider using the clsx library as
     shown at https://nextjs.org/learn/dashboard-app/css-styling

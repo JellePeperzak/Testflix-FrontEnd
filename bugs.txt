@@ -1,0 +1,2 @@
+--- BUGS ---
+- The page can be horizontally scrolled. This should not be the case.

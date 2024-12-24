@@ -75,9 +75,9 @@ const Carousel: React.FC<CarouselProps> = ({ carouselName, carouselItems }) => {
                         )}
                         
                         <div className="overflow-x-visible pb-px">
-                            <div className="whitespace-nowrap">
+                            <div className="whitespace-nowrap relative">
                                 {carouselItems.map((item, index) => (
-                                    <div className={`carousel-item box-border inline-block px-[0.2vw] relative align-top whitespace-normal z-1 ${index === 0 ? 'pl-0' : ''}`}
+                                    <div className={`carousel-item box-border inline-block px-[0.2vw] relative align-top whitespace-normal ${index === 0 ? 'pl-0' : ''} group hover:z-10 z-1`}
                                         key={index}
                                         style={transitionStyles}>
                                         {item}

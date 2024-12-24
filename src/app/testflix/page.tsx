@@ -47,6 +47,7 @@ export default function Page() {
             carouselItems={TestItems}
           />        
         </div>
+        <div className="h-[8rem]"></div>
       </div>
       
     );
