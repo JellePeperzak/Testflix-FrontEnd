@@ -1,8 +1,8 @@
 'use client'
 
 // URL: www.testflix.com with optional ?iid=<item ID>
-import Item from '../../components/items/item-card';
-import HeaderMenu from '@/app/components/header-menu/header-menu';
+import Item from '../../components/items/ItemCard';
+import HeaderMenu from '@/app/components/header-menu/HeaderMenu';
 import { useState } from 'react';
 
 export default function Page() {
@@ -10,7 +10,7 @@ export default function Page() {
 
     return (
       <>
-        <HeaderMenu currentPage="Home"/>
+        <HeaderMenu />
         <div className="h-screen w-screen flex items-center justify-center">
           <div className="w-1/4">
             {exampleType == 'movie' ? (

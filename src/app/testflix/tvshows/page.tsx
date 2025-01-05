@@ -1,5 +1,6 @@
 'use client'
 
+import CarouselLayout from "../layouts/carouselLayout"
 import { useEffect } from "react"
 import { usePageContext } from "@/app/context/PageTypeContext"
 
@@ -7,11 +8,11 @@ export default function TestFlixHomePage() {
   const {pageType, setPageType} = usePageContext()
 
   useEffect(() => {
-    if (pageType != "Search") 
-      {setPageType("Search")}      
+    if (pageType != "TV Shows") 
+      {setPageType("TV Shows")}      
   }, [])
 
   return (
-        <p>hey</p>
+        <CarouselLayout contentType={"TV Shows"}/>
   )
 }

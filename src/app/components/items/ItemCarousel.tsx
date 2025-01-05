@@ -1,15 +1,17 @@
 'use client'
 
-import Item from './item-card';
+import Item, { ItemProps } from './ItemCard';
 import useResponsiveWidth from '@/app/hooks/useResponsiveWidth';
 import { useState } from 'react';
 
-interface CarouselProps {
-    carouselName: string
-    carouselItems: React.ReactElement<typeof Item>[]
+export interface CarouselProps {
+    item_type: string;
+    genre: string;
+    rank: number;
+    items: ItemProps[];
 };
 
-const Carousel: React.FC<CarouselProps> = ({ carouselName, carouselItems }) => {
+const Carousel: React.FC<CarouselProps> = ({ item_type, genre, rank, items }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [carouselFinished, setCarouselFinished] = useState(false);
     const [carouselStart, setCarouselStart] = useState(true);
@@ -50,8 +52,8 @@ const Carousel: React.FC<CarouselProps> = ({ carouselName, carouselItems }) => {
                 break;
             case 'right':
                 setCarouselStart(false);
-                if (currentIndex + jumpDistance >= (carouselItems.length - jumpDistance)) {
-                    setCurrentIndex(carouselItems.length - jumpDistance);
+                if (currentIndex + jumpDistance >= (items.length - jumpDistance)) {
+                    setCurrentIndex(items.length - jumpDistance);
                     setCarouselFinished(true);
                 } else {
                     setCurrentIndex(currentIndex + jumpDistance);
@@ -64,7 +66,7 @@ const Carousel: React.FC<CarouselProps> = ({ carouselName, carouselItems }) => {
     
     return (
             <div className="my-[3vw]">
-                <h1 className='px-[4%] tracking-tighter font-[500] font-["Verdana"]'>{carouselName}</h1>
+                <h1 className='px-[4%] tracking-tighter font-[500] font-["Verdana"]'>{genre} {item_type}</h1>
                 <div className="box-border p-0">
                     <div className="z-2 m-0 px-[4%] relative">
                         {/* CONDITIONAL LEFT NAVIGATION COLUMN */}
@@ -76,11 +78,11 @@ const Carousel: React.FC<CarouselProps> = ({ carouselName, carouselItems }) => {
                         
                         <div className="overflow-x-visible pb-px">
                             <div className="whitespace-nowrap relative">
-                                {carouselItems.map((item, index) => (
+                                {items.map((item, index) => (
                                     <div className={`carousel-item box-border inline-block px-[0.2vw] relative align-top whitespace-normal ${index === 0 ? 'pl-0' : ''} group hover:z-10 z-1`}
                                         key={index}
                                         style={transitionStyles}>
-                                        {item}
+                                        <Item key={`${item['tvdb_id']}${index}`} tvdb_id={item["tvdb_id"]} item_type={item["item_type"]} title={item["title"]} year={item["year"]} genres={item["genres"]} runtime={item["runtime"]} actors={item["actors"]} pg_rating={item["pg_rating"]} banner_url={item["banner_url"]} season_count={item["season_count"]} />
                                     </div>
                                 ))}
                             </div>

@@ -7,7 +7,7 @@ const nextConfig = {
             {
                 protocol: 'https',
                 hostname: 'artworks.thetvdb.com',
-                pathname: '/banners/v4/**',
+                pathname: '/banners/**',
             },
         ],
     },

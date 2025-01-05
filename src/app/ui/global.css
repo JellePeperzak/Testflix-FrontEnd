@@ -184,6 +184,13 @@ h1 {
   }
 }
 
+    /* HEADER SEARCH BAR */
+@media screen and (max-width: 400px) {
+  .display-searchbox {
+      display: none;
+  }
+}    
+
 /* GENERAL STYLES FOR THE BODY */
 
 body {
@@ -257,6 +264,14 @@ ul {
   border-bottom-left-radius: 4px;
   border-top-left-radius: 4px;
   right: 0;
+}
+
+.bg-searchbar-input {
+  background: rgba(0,0,0,.75);
+}
+
+.b-searchbar-input {
+  border: 1px solid hsla(0,0%,100%,.85);
 }
 
 
