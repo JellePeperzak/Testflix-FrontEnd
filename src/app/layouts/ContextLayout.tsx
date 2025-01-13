@@ -1,5 +1,6 @@
 'use client'
 
+import { CurrentAlgorithmProvider } from "../context/CurrentAlgorithmContext";
 import { Algorithm1Provider } from "../context/Algorithm1Context";
 import { Algorithm2Provider } from "../context/Algorithm2Context";
 import { Algorithm3Provider } from "../context/Algorithm3Context";
@@ -16,9 +17,11 @@ export default function ContextLayout({ children }: { children: React.ReactNode 
           <Algorithm1Provider>
             <Algorithm2Provider>
               <Algorithm3Provider>
-                <Layout>
-                  {children}
-                </Layout>
+                <CurrentAlgorithmProvider>
+                  <Layout>
+                    {children}
+                  </Layout>
+                </CurrentAlgorithmProvider>
               </Algorithm3Provider>
             </Algorithm2Provider>
           </Algorithm1Provider>

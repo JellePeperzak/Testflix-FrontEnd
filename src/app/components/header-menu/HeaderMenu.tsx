@@ -3,7 +3,9 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePageContext} from '@/app/context/PageTypeContext'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, ChangeEvent } from 'react'
+import { usePathname, useRouter } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 
 const HeaderMenu: React.FC = () => {
     const { pageType, setPageType } = usePageContext();
@@ -75,13 +77,24 @@ function SearchBar() {
     const [searchBarFocus, setSearchBarFocus] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [initialUrl, setInitialUrl] = useState("");
+    const [searchPage, setSearchPage] = useState(false);
+
+    const searchParams = useSearchParams();
+    const urlVariable = searchParams.get('q');
+
     const searchBarRef = useRef<HTMLDivElement>(null);
+
+    const pathname = usePathname();
+    const router = useRouter();
 
     useEffect(() => {
         const handleSearchButtonClickOutside = (event: MouseEvent) => {
             if (searchBarRef.current && !searchBarRef.current.contains(event.target as Node)) {
                 console.log('Clicked outside search bar');
-                setSearchBarFocus(false);
+                if (!searchPage) {
+                    setSearchBarFocus(false);
+                }
+                
             } else {
                 console.log('Clicked inside search bar');
             }
@@ -92,18 +105,50 @@ function SearchBar() {
         return () => {
             document.removeEventListener('mousedown', handleSearchButtonClickOutside)
         }
-    }, []);
+    }, [searchPage]);
+
+    useEffect(() => {
+        if (!urlVariable && searchQuery) {
+            setSearchPage(false);
+            setSearchQuery("");
+            setInitialUrl("");
+            setSearchBarFocus(false);
+        }
+    }, [urlVariable])
     
-    const handleSearchButtonClick = () => {
-        setSearchBarFocus(true)
+    const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (searchQuery.length === 0 && e.target.value.length > 0) {
+            setInitialUrl(pathname)
+            router.push(`/testflix/search/?q=${e.target.value}`)
+            setSearchPage(true)
+        }
+        if (searchQuery.length > 0 && e.target.value.length !== 0) {
+            router.push(`/testflix/search/?q=${e.target.value}`)
+        }
+        if (searchQuery.length !== 0 && e.target.value.length === 0) {
+            router.push(initialUrl)
+            setSearchPage(false)
+        }
+        setSearchQuery(e.target.value);
     };
+
+    const handleSearchButtonClick = () => {
+        setSearchBarFocus(true);
+    };
+
+    const handleDeleteButtonClick = () => {
+        setSearchQuery("")
+        setSearchPage(false)
+        setSearchBarFocus(false);
+        router.push(initialUrl)
+    }
 
     return (
         <div 
-            className={`inline-block align-middle display-searchbox ${searchBarFocus && "ml-[100px] scale-[1.2]"}`}
+            className={`inline-block align-middle display-searchbox ${searchBarFocus && "ml-[100px]"}`}
             ref={searchBarRef}
         >
-            <div className={`flex items-center bg-searchbar-input ${searchBarFocus && "b-searchbar-input"}`}>
+            <div className={`flex items-center ${searchBarFocus && "b-searchbar-input"}`}>
                 {!searchBarFocus ? (
                     <button 
                         className="inline-block bg-transparent border-none cursor-pointer"
@@ -119,11 +164,14 @@ function SearchBar() {
                 <input 
                     className={`${searchBarFocus ? "w-[212px] pt-[7px] pr-[14px] pb-[7px] pl-[7px] duration-300" : "w-[0px]"} inline-block box-border bg-transparent text-[14px] text-[#fff] border-0 outline-none`}
                     value={searchQuery}
+                    onChange={handleInputChange}
+                    placeholder="Search for a title"
                 />
-                {searchBarFocus && (
+                {(searchBarFocus && searchQuery.length > 0) && (
                     <div className="flex items-center px-[6px] h-[24px]">
                         <i 
                             className={`fas fa-x text-[15px] mx-[6px] cursor-pointer`}
+                            onClick={handleDeleteButtonClick}
                         />
                     </div>
                 )}
