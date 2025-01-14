@@ -2,8 +2,10 @@ import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 // Define the type for the context value
 type CurrentAlgorithmContextType = {
-  currentAlgorithm: number;
-  setCurrentAlgorithm: (currentAlgorithm: number) => void;
+  currentAlgorithmIndex: number;
+  algorithmOrder: number[];
+  setCurrentAlgorithmIndex: (currentAlgorithmIndex: number) => void;
+  setAlgorithmOrder: (algorithmOrder: number[]) => void;
 };
 
 // Create the context with a default value
@@ -11,10 +13,11 @@ const CurrentAlgorithmContext = createContext<CurrentAlgorithmContextType | unde
 
 // Create a provider component
 export const CurrentAlgorithmProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [currentAlgorithm, setCurrentAlgorithm] = useState<number>(0); // You can initialize the digit as needed (e.g., 0)
+  const [currentAlgorithmIndex, setCurrentAlgorithmIndex] = useState<number>(0); // You can initialize the digit as needed (e.g., 0)
+  const [algorithmOrder, setAlgorithmOrder] = useState<number[]>([]);
 
   return (
-    <CurrentAlgorithmContext.Provider value={{ currentAlgorithm, setCurrentAlgorithm }}>
+    <CurrentAlgorithmContext.Provider value={{ currentAlgorithmIndex, algorithmOrder, setCurrentAlgorithmIndex, setAlgorithmOrder }}>
       {children}
     </CurrentAlgorithmContext.Provider>
   );

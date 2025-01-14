@@ -24,7 +24,7 @@ export default function CarouselLayout({ contentType }: CarouselLayoutProps) {
     const { carouselObjects1 } = useAlgorithm1Context()
     const { carouselObjects2 } = useAlgorithm2Context()
     const { carouselObjects3 } = useAlgorithm3Context()
-    const { currentAlgorithm } = useCurrentAlgorithmContext();
+    const { currentAlgorithmIndex, algorithmOrder } = useCurrentAlgorithmContext();
 
 
     useEffect(() => {
@@ -49,7 +49,7 @@ export default function CarouselLayout({ contentType }: CarouselLayoutProps) {
             }
         }
 
-        switch(currentAlgorithm) {
+        switch(algorithmOrder[currentAlgorithmIndex]) {
             case 1:
                 generatePage(carouselObjects1)
                 break;
@@ -64,7 +64,7 @@ export default function CarouselLayout({ contentType }: CarouselLayoutProps) {
                 setLoading(false)
                 break;
           }
-    }, [currentAlgorithm])
+    }, [currentAlgorithmIndex])
 
     return (
       <div>

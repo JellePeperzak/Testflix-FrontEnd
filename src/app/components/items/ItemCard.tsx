@@ -2,7 +2,10 @@
 
 import Image from 'next/image';
 import '@fortawesome/fontawesome-free/css/all.css';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, MouseEventHandler } from 'react';
+
+import { usePageContext } from '@/app/context/PageTypeContext';
+import { useRouter } from 'next/navigation';
 
 export interface ItemProps {
     tvdb_id?: string
@@ -19,11 +22,13 @@ export interface ItemProps {
 };
 
 const Item: React.FC<ItemProps> = ({ banner_url, item_type, title, pg_rating, genres, runtime, season_count}) => {
-    const [isHovered, setIsHovered] = useState(false);
     const [isDelayedHovered, setIsDelayedHovered] = useState(false);
     const [runtimeFormatted, setRuntimeFormatted] = useState(`${runtime}m`)
     const timeoutId = useRef<NodeJS.Timeout | null>(null);
     const pgIconPath = `/icons/pg-icons/PG${pg_rating}.png`;
+
+    const router = useRouter();
+    const { setPageType } = usePageContext();
 
     useEffect(() => {
         const runtimeNumber = parseInt(runtime, 10)
@@ -44,15 +49,19 @@ const Item: React.FC<ItemProps> = ({ banner_url, item_type, title, pg_rating, ge
         if (timeoutId.current) {
             clearTimeout(timeoutId.current);
         }
-        setIsHovered(false);
         setIsDelayedHovered(false);
+    }
+
+    const handleChoiceSubmit = () => {
+        // FUNCTION THAT TRIGGERS WHEN THE USER CONFIRMS THEIR SELECTION OF AN ITEM
+        setPageType("Questions")
+        router.push("/research/questions")
     }
     
     return (
         <div className={`relative w-fit h-auto rounded bg-[#242424] transition-all duration-300 ${isDelayedHovered ? 'translate-y-[-60%] scale-[1.4]  h-[calc(200%)] z-100 card-shaded-top' : 'z-10'}`}
             onMouseLeave={handleMouseLeave}
             onMouseEnter={() => {
-                setIsHovered(true);
                 handleMouseEnter();
             }}
         >
@@ -66,7 +75,10 @@ const Item: React.FC<ItemProps> = ({ banner_url, item_type, title, pg_rating, ge
             />
             <div className={`absolute card-grid-container w-full h-fit top-full -mt-1 left-0 bg-[#181818] p-[16px] rounded-b card-shaded-bottom transition-opacity ${isDelayedHovered ? 'opacity-1' : 'opacity-0 pointer-events-none'}`}>
                 <div className="flex gap-x-[6px]">
-                    <button className="button-size-variable bg-[#ededed] text-[#000000] rounded-full flex items-center justify-center">
+                    <button 
+                        className="button-size-variable bg-[#ededed] text-[#000000] rounded-full flex items-center justify-center"
+                        onClick={handleChoiceSubmit}
+                    >
                         <i className="fas fa-play icon-size-variable ml-[0.1em] scale-x-110"></i>
                     </button>
                     <button className="button-size-variable bg-[#232323] text-[#181818] border-[0.13em] border-[#757575] rounded-full flex items-center justify-center">

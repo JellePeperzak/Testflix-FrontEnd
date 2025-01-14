@@ -1,5 +1,6 @@
 'use client'
 
+import { TaskProvider } from "../context/TaskContext";
 import { CurrentAlgorithmProvider } from "../context/CurrentAlgorithmContext";
 import { Algorithm1Provider } from "../context/Algorithm1Context";
 import { Algorithm2Provider } from "../context/Algorithm2Context";
@@ -18,9 +19,11 @@ export default function ContextLayout({ children }: { children: React.ReactNode 
             <Algorithm2Provider>
               <Algorithm3Provider>
                 <CurrentAlgorithmProvider>
-                  <Layout>
-                    {children}
-                  </Layout>
+                  <TaskProvider>
+                    <Layout>
+                      {children}
+                    </Layout>
+                  </TaskProvider>
                 </CurrentAlgorithmProvider>
               </Algorithm3Provider>
             </Algorithm2Provider>
