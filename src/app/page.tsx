@@ -1,31 +1,42 @@
 'use client'
-import React, { useEffect } from "react";
+import React, { useEffect, useState, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 
 import LayoutResearch from "./research/layout/LayoutResearch";
 
 import { usePageContext } from "./context/PageTypeContext";
-import { useParticipantNumberContext } from "./context/ParticipantNumberContext";
-
+import { useBackendDataContext } from "./context/BackendDataContext";
 
 
 
 // Participantnumber needs to be validated
 export default function Home () {
+  const [consentGiven, setConsentGiven] = useState<boolean>(false)
+  const [errorMessage, setErrorMessage] = useState<string>();
+
   const {pageType, setPageType} = usePageContext();
-  const { setParticipantNumber } = useParticipantNumberContext();
+  const {setDataToStore} = useBackendDataContext();
 
   const router = useRouter();
 
   useEffect(() => {
-      if (pageType != "Intro") 
-        {setPageType("Intro")}      
+      if (pageType != "Research") 
+        {setPageType("Research")}      
   }, [])
 
-  const handleFormSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setParticipantNumber('001');
-    setPageType("Demographics");
+  const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setConsentGiven(e.target.checked);
+  };
+
+  const handleButtonClick = () => {
+    if (!consentGiven) {
+      setErrorMessage("Please tick the checkbox before you continue.")
+      return
+    }
+    const currentTime = Date.now()
+    setDataToStore({
+      time_start: currentTime
+    })
     router.push("/research/demographics")
   }
 
@@ -102,7 +113,7 @@ export default function Home () {
           <p>
             That is amazing! To start your participation, tick the checkbox below and click on the Participate button.
           </p>
-          <form className="flex flex-col my-[0.5rem]" onSubmit={handleFormSubmit}>
+          <div className="flex flex-col my-[0.5rem]">
             <div className="flex items-center gap-[0.5em]">
               <input 
                 type="checkbox" 
@@ -110,19 +121,21 @@ export default function Home () {
                 name="consent" 
                 value="consent" 
                 className="w-[1.2em] h-[1.2em]"
-                required/>
+                onChange={handleCheckboxChange}
+              />
               <label htmlFor="consent" className="leading-8">
                 Yes, I have read and understood the information provided above and I consent to my answers being used for the purposes of 
                 scientific research as described above.
               </label>
             </div>
+            {errorMessage && <p className="text-red-500 text-center mt-[1em]">{errorMessage}</p>}
             <button 
-              type="submit"
+              onClick={handleButtonClick}
               className="w-fit self-center bg-black text-[#E50914] text-[125%] font-bold px-[1em] py-[0.5em] mt-[1em] rounded-lg"
             >
               PARTICIPATE
             </button>
-          </form> 
+          </div> 
         </div> 
       </div>            
     </LayoutResearch>

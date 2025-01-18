@@ -16,8 +16,8 @@ export default function TestFlixHomePage() {
   const {pageType, setPageType} = usePageContext()
 
   useEffect(() => {
-    if (pageType != "Home") 
-      {setPageType("Home")}      
+    if (pageType != "Testflix") 
+      {setPageType("Testflix")}      
   }, [])
 
   return (

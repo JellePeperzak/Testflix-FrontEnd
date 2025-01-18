@@ -3,14 +3,47 @@
 import CarouselLayout from "../layouts/carouselLayout"
 import { useEffect } from "react"
 import { usePageContext } from "@/app/context/PageTypeContext"
+import { useBackendDataContext } from "@/app/context/BackendDataContext"
+import { useTaskContext } from "@/app/context/TaskContext"
+import { useCurrentAlgorithmContext } from "@/app/context/CurrentAlgorithmContext"
 
-export default function TestFlixHomePage() {
+export default function TestFlixMoviesPage() {
   const {pageType, setPageType} = usePageContext()
+  const {dataToStore, setDataToStore} = useBackendDataContext();
+  const {taskOrder, currentTaskIndex} = useTaskContext();
+  const {algorithmOrder, currentAlgorithmIndex} = useCurrentAlgorithmContext();
 
   useEffect(() => {
-    if (pageType != "Movies") 
-      {setPageType("Movies")}      
-  }, [])
+    if (pageType != "Testflix") {
+      setPageType("Testflix")
+    }
+    // Track whether user used this page for the task
+    const taskKeyName = `task${taskOrder[currentTaskIndex]}_movie`
+    const algorithmKeyName = `algorithm${algorithmOrder[currentAlgorithmIndex]}_movie`
+    
+    let keyDataObject = {}
+    
+    if (!Object.keys(dataToStore).includes(taskKeyName)) {
+      keyDataObject = {
+        ...keyDataObject,
+        [taskKeyName]: true
+      }
+    }
+
+    if (!Object.keys(dataToStore).includes(algorithmKeyName)) {
+      keyDataObject = {
+        ...keyDataObject,
+        [algorithmKeyName]: true
+      }
+    }
+    
+    if (Object.keys(keyDataObject).length > 0) {
+      setDataToStore({
+        ...dataToStore,
+        ...keyDataObject
+      })
+    }
+  }, [currentTaskIndex, currentAlgorithmIndex, pageType])
 
   return (
         <CarouselLayout contentType={"Movies"}/>

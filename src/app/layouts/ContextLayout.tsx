@@ -8,6 +8,7 @@ import { Algorithm3Provider } from "../context/Algorithm3Context";
 import { PageProvider } from "../context/PageTypeContext";
 import { CsvDataProvider } from "../context/CsvDataContext";
 import { ParticipantNumberProvider } from "../context/ParticipantNumberContext";
+import { BackendDataProvider } from "../context/BackendDataContext";
 import Layout from "../components/Layout"; // Adjust path as needed
 
 export default function ContextLayout({ children }: { children: React.ReactNode }) {
@@ -15,19 +16,21 @@ export default function ContextLayout({ children }: { children: React.ReactNode 
     <PageProvider>
       <CsvDataProvider>
         <ParticipantNumberProvider>
-          <Algorithm1Provider>
-            <Algorithm2Provider>
-              <Algorithm3Provider>
-                <CurrentAlgorithmProvider>
-                  <TaskProvider>
-                    <Layout>
-                      {children}
-                    </Layout>
-                  </TaskProvider>
-                </CurrentAlgorithmProvider>
-              </Algorithm3Provider>
-            </Algorithm2Provider>
-          </Algorithm1Provider>
+          <BackendDataProvider>
+            <Algorithm1Provider>
+              <Algorithm2Provider>
+                <Algorithm3Provider>
+                  <CurrentAlgorithmProvider>
+                    <TaskProvider>
+                      <Layout>
+                        {children}
+                      </Layout>
+                    </TaskProvider>
+                  </CurrentAlgorithmProvider>
+                </Algorithm3Provider>
+              </Algorithm2Provider>
+            </Algorithm1Provider>
+          </BackendDataProvider>
         </ParticipantNumberProvider>
       </CsvDataProvider>
     </PageProvider>

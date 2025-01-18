@@ -1,10 +1,13 @@
 'use client'
-import { useState, ReactNode } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import { useTaskContext } from "@/app/context/TaskContext";
 import { useCurrentAlgorithmContext } from "@/app/context/CurrentAlgorithmContext";
 import { usePageContext } from "@/app/context/PageTypeContext";
+import { useBackendDataContext } from '@/app/context/BackendDataContext';
+
+import { DataToStoreProps } from "@/app/components/interfaces/backendDataObject";
 
 import LayoutResearch from "../layout/LayoutResearch";
 
@@ -14,12 +17,13 @@ interface statementObject {
 }
 
 export default function QuestionnaireExperience() {
-    const [responses, setResponses] = useState<{ [key: string]: number}>({});
+    const [responses, setResponses] = useState<DataToStoreProps>({});
     const [responseCheck, setResponseCheck] = useState(true);
 
     const {taskOrder, currentTaskIndex, setCurrentTaskIndex} = useTaskContext();
     const {currentAlgorithmIndex, algorithmOrder, setCurrentAlgorithmIndex} = useCurrentAlgorithmContext();
-    const {setPageType} = usePageContext();
+    const {dataToStore, setDataToStore, participantNumber} = useBackendDataContext();
+    const {pageType, setPageType} = usePageContext();
 
     const router = useRouter();
 
@@ -58,6 +62,12 @@ export default function QuestionnaireExperience() {
         statementType: 'eval'
     };
 
+    useEffect(() => {
+        if (pageType !== "Research") {
+          setPageType("Research")
+        }
+    }, []);
+
     const handleResponseChange = (name: string, value: number) => {
         setResponses((prevResponses) => ({
             ...prevResponses,
@@ -65,7 +75,7 @@ export default function QuestionnaireExperience() {
         }));
     };
 
-    const handleFormSubmit = (e: React.FormEvent) => {
+    const handleFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         // IF THE AMOUNT OF STATEMENTS CHANGES, THE NUMBER SHOULD CHANGE AS WELL
@@ -79,24 +89,84 @@ export default function QuestionnaireExperience() {
         }
 
         // SEND A REQUEST TO THE BACK-END TO STORE THE RESPONSES IN THE DATABASE
+        try {
+            // Update the dataToStore object with questionnaire data to prepare it for the database
+            // Set value of task- and algorithm-related exploration variables to false if they don't exist yet
+            const taskKeyNameMovie = `task${taskOrder[currentTaskIndex]}_movie`
+            const taskKeyNameSearch = `task${taskOrder[currentTaskIndex]}_search`
+            const taskKeyNameSeries = `task${taskOrder[currentTaskIndex]}_series`
+            const algorithmKeyNameMovie = `algorithm${algorithmOrder[currentAlgorithmIndex]}_movie`
+            const algorithmKeyNameSearch = `algorithm${algorithmOrder[currentAlgorithmIndex]}_search`
+            const algorithmKeyNameSeries = `algorithm${algorithmOrder[currentAlgorithmIndex]}_series`
+            const keyCheckList = [taskKeyNameMovie, taskKeyNameSearch, taskKeyNameSeries, algorithmKeyNameMovie, algorithmKeyNameSearch, algorithmKeyNameSeries]
+            let missingKeysObject = {}
+            for (const k in keyCheckList) {
+                if (!Object.keys(dataToStore).includes(keyCheckList[k])) {
+                    missingKeysObject = {
+                        ...missingKeysObject,
+                        [keyCheckList[k]]: false
+                    }
+                }
+            }
 
-        // MOVE ON TO THE NEXT TASK WITH THE NEXT ALGORITHM
-        if (currentTaskIndex + 1 === taskOrder.length) {
-            router.push('/research/thankyou')
-            return
+            if (currentTaskIndex === 2) {
+                const currentTime = Date.now()
+                missingKeysObject = {
+                    ...missingKeysObject,
+                    time_finish: currentTime
+                }
+            }
+
+            const completeDataToStoreObject: DataToStoreProps = {
+                ...dataToStore,
+                ...responses,
+                ...missingKeysObject,
+            }
+
+            // API call to trigger data storage
+            const response = await fetch('http://127.0.0.1:5000/api/update-database', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    'participant_number': participantNumber,
+                    'data': completeDataToStoreObject
+                })
+            })
+            
+            if (!response.ok) {
+                throw new Error(`Failed to fetch algorithm data`)
+            }
+            
+            const data = await response.json()
+
+            if (data.success) {
+                // MOVE ON TO THE NEXT TASK WITH THE NEXT ALGORITHM
+                if (currentTaskIndex + 1 === taskOrder.length) {
+                    router.push('/research/thankyou')
+                    return
+                } else {
+                    setCurrentTaskIndex(currentTaskIndex + 1);
+                    setCurrentAlgorithmIndex(currentAlgorithmIndex + 1);
+                    setDataToStore({})
+                    
+                    router.push('/research/task');
+                } 
+            } else {
+                console.error("Data storage failed:", data.error || "Unknown error")
+            };
+
+        } catch (error) {
+            console.error('Error fetching data:', error)
         }
-
-        setCurrentTaskIndex(currentTaskIndex + 1);
-        setCurrentAlgorithmIndex(currentAlgorithmIndex + 1);
-
-        setPageType('Home');
-        router.push('/testflix');
     }
 
     return (
         <LayoutResearch title="What do you think?">
             <div className="flex flex-col w-fit items-center mx-auto">
                 <p>Below you will find 23 statements. Please respond to them based on the task you have just performed.</p>
+                <p>Response count: {Object.keys(responses).length}</p>
             </div>
             <form className="flex flex-col" onSubmit={handleFormSubmit}>
                 <QuestionList statementObjects={[gratStatements, evalStatements]} handleResponseChange={handleResponseChange} />
@@ -141,7 +211,7 @@ function QuestionList({ statementObjects, handleResponseChange }: QuestionListPr
                     </div>
                     <LikertInput 
                         key={`likertinput-${statementObjects[0]['statementType']}${index+1}`} 
-                        inputName={`${statementObjects[0]['statementType']}${index+1}-${algorithmOrder[currentAlgorithmIndex]}`} 
+                        inputName={`${statementObjects[0]['statementType']}_${index+1}_${algorithmOrder[currentAlgorithmIndex]}`} 
                         size={5} 
                         handleResponseChange={handleResponseChange}
                     />
@@ -156,7 +226,7 @@ function QuestionList({ statementObjects, handleResponseChange }: QuestionListPr
                     </div>
                     <LikertInput 
                         key={`likertinput-${statementObjects[1]['statementType']}${index+1}`} 
-                        inputName={`${statementObjects[1]['statementType']}${index+1}-${algorithmOrder[currentAlgorithmIndex]}`} 
+                        inputName={`${statementObjects[1]['statementType']}_${index+1}_${algorithmOrder[currentAlgorithmIndex]}`} 
                         size={5} 
                         handleResponseChange={handleResponseChange}
                     />

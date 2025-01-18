@@ -7,6 +7,8 @@ import { useCurrentAlgorithmContext } from "@/app/context/CurrentAlgorithmContex
 import { useAlgorithm1Context } from '@/app/context/Algorithm1Context';
 import { useAlgorithm2Context } from '@/app/context/Algorithm2Context';
 import { useAlgorithm3Context } from '@/app/context/Algorithm3Context';
+import { useBackendDataContext } from "@/app/context/BackendDataContext"
+import { useTaskContext } from "@/app/context/TaskContext"
 
 import Item, { ItemProps } from "@/app/components/items/ItemCard";
 
@@ -17,12 +19,43 @@ interface SearchGridProps {
 
 export default function TestFlixSearchPage() {
   const {pageType, setPageType} = usePageContext();
+  const {dataToStore, setDataToStore} = useBackendDataContext();
+  const {taskOrder, currentTaskIndex} = useTaskContext();
+  const {algorithmOrder, currentAlgorithmIndex} = useCurrentAlgorithmContext();
+  
   
   useEffect(() => {
-    if (pageType != "Search") 
-      {setPageType("Search")}    
+    if (pageType != "Testflix") {
+      setPageType("Testflix")
+    }    
 
-  }, [])
+    // Track whether user used this page for the task
+    const taskKeyName = `task${taskOrder[currentTaskIndex]}_search`
+    const algorithmKeyName = `algorithm${algorithmOrder[currentAlgorithmIndex]}_search`
+    
+    let keyDataObject = {}
+    
+    if (!Object.keys(dataToStore).includes(taskKeyName)) {
+      keyDataObject = {
+        ...keyDataObject,
+        [taskKeyName]: true
+      }
+    }
+
+    if (!Object.keys(dataToStore).includes(algorithmKeyName)) {
+      keyDataObject = {
+        ...keyDataObject,
+        [algorithmKeyName]: true
+      }
+    }
+    
+    if (Object.keys(keyDataObject).length > 0) {
+      setDataToStore({
+        ...dataToStore,
+        ...keyDataObject
+      })
+    }
+  }, [currentTaskIndex, currentAlgorithmIndex, pageType])
 
   return (
         <SearchPageContent />
@@ -34,7 +67,7 @@ function SearchPageContent() {
   const [itemData, setItemData] = useState<ItemProps[] | null>(null);
   const [filteredData, setFilteredData] = useState<ItemProps[] | null>(null);
   const [loading, setLoading] = useState<boolean>(true)
-  const { currentAlgorithm } = useCurrentAlgorithmContext();
+  const { currentAlgorithmIndex, algorithmOrder } = useCurrentAlgorithmContext();
   
   const { itemObjectList1 } = useAlgorithm1Context()
   const { itemObjectList2 } = useAlgorithm2Context()
@@ -44,7 +77,7 @@ function SearchPageContent() {
   const searchQuery = searchParams.get('q');
 
   useEffect(() => {
-    switch(currentAlgorithm) {
+    switch(algorithmOrder[currentAlgorithmIndex]) {
       case 1:
         setItemData(itemObjectList1)
         setLoading(false)
@@ -62,7 +95,7 @@ function SearchPageContent() {
         setLoading(false)
         break;
     }
-  }, [currentAlgorithm])
+  }, [currentAlgorithmIndex])
 
   useEffect(() => {
     if (itemData && searchQuery) {

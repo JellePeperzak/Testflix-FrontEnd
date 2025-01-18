@@ -2,10 +2,12 @@
 
 import Image from 'next/image';
 import '@fortawesome/fontawesome-free/css/all.css';
-import { useState, useRef, useEffect, MouseEventHandler } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 import { usePageContext } from '@/app/context/PageTypeContext';
 import { useRouter } from 'next/navigation';
+import { useTaskContext } from '@/app/context/TaskContext';
+import { useBackendDataContext } from '@/app/context/BackendDataContext';
 
 export interface ItemProps {
     tvdb_id?: string
@@ -26,9 +28,12 @@ const Item: React.FC<ItemProps> = ({ banner_url, item_type, title, pg_rating, ge
     const [runtimeFormatted, setRuntimeFormatted] = useState(`${runtime}m`)
     const timeoutId = useRef<NodeJS.Timeout | null>(null);
     const pgIconPath = `/icons/pg-icons/PG${pg_rating}.png`;
+    
+    const {taskOrder, currentTaskIndex} = useTaskContext();
+    const {dataToStore, setDataToStore} = useBackendDataContext();
+    const { setPageType } = usePageContext();
 
     const router = useRouter();
-    const { setPageType } = usePageContext();
 
     useEffect(() => {
         const runtimeNumber = parseInt(runtime, 10)
@@ -54,8 +59,35 @@ const Item: React.FC<ItemProps> = ({ banner_url, item_type, title, pg_rating, ge
 
     const handleChoiceSubmit = () => {
         // FUNCTION THAT TRIGGERS WHEN THE USER CONFIRMS THEIR SELECTION OF AN ITEM
-        setPageType("Questions")
-        router.push("/research/questions")
+        const currentTime = Date.now()
+        switch (taskOrder[currentTaskIndex]) {
+            case 1:
+                setPageType("Research")
+                setDataToStore({
+                    ...dataToStore,
+                    task1_finish: currentTime
+                })
+                router.push('/research/questions')
+                break;
+            case 2: 
+                setPageType("Research")
+                setDataToStore({
+                    ...dataToStore,
+                    task2_finish: currentTime
+                })
+                router.push('/research/questions')
+                break;
+            case 3:
+                setPageType("Research") 
+                setDataToStore({
+                    ...dataToStore,
+                    task3_finish: currentTime
+                })
+                router.push('/research/questions')
+                break;
+            default:
+                throw new Error(`Current task number could not be identified and stored in the dataToStore context`)
+        }
     }
     
     return (

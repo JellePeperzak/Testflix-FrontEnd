@@ -10,11 +10,11 @@ interface LayoutProps {
 }
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
-    const { pageType, setPageType } = usePageContext();
+    const { pageType } = usePageContext();
 
     return (
       <>
-        {["Home", "Movies", "TV Shows", "Search"].includes(pageType) && (
+        {pageType == 'Testflix' && (
             <HeaderMenu />
         )}
         <main>{children}</main>
