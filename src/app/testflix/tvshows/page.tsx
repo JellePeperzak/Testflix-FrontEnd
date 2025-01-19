@@ -16,8 +16,8 @@ export default function TestFlixHomePage() {
 
 
   useEffect(() => {
-    if (pageType != "Testflix") {
-      setPageType("Testflix")
+    if (pageType != "TV Shows") {
+      setPageType("TV Shows")
     }
     // Track whether user used this page for the task
     const taskKeyName = `task${taskOrder[currentTaskIndex]}_series`

@@ -21,9 +21,9 @@ const HeaderMenu: React.FC = () => {
             <div className="relative left-0 right-0 top-0 z-1 bg-[#141414]">
                 <div className="relative flex height-header-menu bg-gradient-header-menu items-center p-header-menu text-size-header-menu z-2">
                     <Link 
-                        href={"/"}
+                        href={"/testflix"}
                         className="inline-block align-middle mr-header-logo "
-                        onClick={() => setPageType("Introduction")}
+                        onClick={() => setPageType("Home")}
                     >
                         <Image 
                             src={"/logo.png"}
@@ -90,13 +90,9 @@ function SearchBar() {
     useEffect(() => {
         const handleSearchButtonClickOutside = (event: MouseEvent) => {
             if (searchBarRef.current && !searchBarRef.current.contains(event.target as Node)) {
-                console.log('Clicked outside search bar');
                 if (!searchPage) {
                     setSearchBarFocus(false);
-                }
-                
-            } else {
-                console.log('Clicked inside search bar');
+                }  
             }
         };
     
@@ -113,6 +109,10 @@ function SearchBar() {
             setSearchQuery("");
             setInitialUrl("");
             setSearchBarFocus(false);
+        } else if (urlVariable && !searchQuery){
+            setSearchBarFocus(true);
+            setSearchPage(true);
+            setSearchQuery(urlVariable);
         }
     }, [urlVariable])
     
@@ -126,7 +126,11 @@ function SearchBar() {
             router.push(`/testflix/search/?q=${e.target.value}`)
         }
         if (searchQuery.length !== 0 && e.target.value.length === 0) {
-            router.push(initialUrl)
+            if (initialUrl.length === 0) {
+                router.push('/testflix')
+            } else {
+                router.push(initialUrl)
+            }
             setSearchPage(false)
         }
         setSearchQuery(e.target.value);
@@ -140,7 +144,11 @@ function SearchBar() {
         setSearchQuery("")
         setSearchPage(false)
         setSearchBarFocus(false);
-        router.push(initialUrl)
+        if (initialUrl.length === 0) {
+            router.push('/testflix')
+        } else {
+            router.push(initialUrl)
+        }
     }
 
     return (

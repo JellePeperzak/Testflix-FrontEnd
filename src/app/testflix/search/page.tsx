@@ -25,8 +25,8 @@ export default function TestFlixSearchPage() {
   
   
   useEffect(() => {
-    if (pageType != "Testflix") {
-      setPageType("Testflix")
+    if (pageType != "Search") {
+      setPageType("Search")
     }    
 
     // Track whether user used this page for the task
@@ -67,7 +67,7 @@ function SearchPageContent() {
   const [itemData, setItemData] = useState<ItemProps[] | null>(null);
   const [filteredData, setFilteredData] = useState<ItemProps[] | null>(null);
   const [loading, setLoading] = useState<boolean>(true)
-  const { currentAlgorithmIndex, algorithmOrder } = useCurrentAlgorithmContext();
+  const { currentAlgorithmIndex, algorithmOrder, algorithmInitialized } = useCurrentAlgorithmContext();
   
   const { itemObjectList1 } = useAlgorithm1Context()
   const { itemObjectList2 } = useAlgorithm2Context()
@@ -77,6 +77,10 @@ function SearchPageContent() {
   const searchQuery = searchParams.get('q');
 
   useEffect(() => {
+    if (!algorithmInitialized) {
+      return
+    };
+
     switch(algorithmOrder[currentAlgorithmIndex]) {
       case 1:
         setItemData(itemObjectList1)
@@ -95,7 +99,7 @@ function SearchPageContent() {
         setLoading(false)
         break;
     }
-  }, [currentAlgorithmIndex])
+  }, [currentAlgorithmIndex, algorithmInitialized])
 
   useEffect(() => {
     if (itemData && searchQuery) {
@@ -119,7 +123,6 @@ function SearchPageContent() {
           {!itemData ? (
               <>
                   <p>Error loading data - no data available</p>
-                  <p>{String(itemObjectList1)}</p>
               </>
           ) : (
               <>

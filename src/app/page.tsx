@@ -22,7 +22,7 @@ export default function Home () {
   useEffect(() => {
       if (pageType != "Research") 
         {setPageType("Research")}      
-  }, [])
+  }, [pageType])
 
   const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
     setConsentGiven(e.target.checked);

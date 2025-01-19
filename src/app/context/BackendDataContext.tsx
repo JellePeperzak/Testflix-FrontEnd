@@ -1,6 +1,8 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, ReactNode } from "react";
 
 import { DataToStoreProps } from "../components/interfaces/backendDataObject";
+
+import { usePersistentState } from "../hooks/usePersistentState";
 
 interface BackendDataContextType {
     participantNumber: number | false;          // Either holds the participantNumber, or 'false' if it's the first request to store data
@@ -14,9 +16,9 @@ interface BackendDataContextType {
 const BackendDataContext = createContext<BackendDataContextType | undefined>(undefined);
 
 export const BackendDataProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    const [participantNumber, setParticipantNumber] = useState<number | false>(false);
-    const [dataToStore, setDataToStore] = useState<DataToStoreProps>({});
-    const [preferenceIDs, setPreferenceIDs] = useState<string[]>([]);
+    const [participantNumber, setParticipantNumber] = usePersistentState<number | false>('participantNumber', false);
+    const [dataToStore, setDataToStore] = usePersistentState<DataToStoreProps>('dataToStore', {});
+    const [preferenceIDs, setPreferenceIDs] = usePersistentState<string[]>('preferenceIDs', []);
 
     return (
         <BackendDataContext.Provider value={{ participantNumber, dataToStore, preferenceIDs, setParticipantNumber, setDataToStore, setPreferenceIDs }}>

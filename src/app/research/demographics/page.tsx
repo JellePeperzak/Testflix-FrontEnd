@@ -30,7 +30,7 @@ export default function QuestionnaireDemographic() {
     useEffect(() => {
           if (pageType != "Research") 
             {setPageType("Research")}      
-    }, [])
+    }, [pageType])
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         switch(e.target.getAttribute('name')) {

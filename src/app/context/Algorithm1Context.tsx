@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, ReactNode } from 'react';
 import { CarouselProps } from '../components/items/ItemCarousel';
+import { usePersistentState } from '../hooks/usePersistentState';
 
 // Define types for the context values
 interface CarouselObjects1 {
@@ -24,12 +25,12 @@ interface Algorithm1ProviderProps {
 }
 
 export const Algorithm1Provider: React.FC<Algorithm1ProviderProps> = ({ children }) => {
-  const [carouselObjects1, setCarouselObjects1] = useState<CarouselObjects1>({
+  const [carouselObjects1, setCarouselObjects1] = usePersistentState<CarouselObjects1>('carouselObjects1', {
     home_carousels: [],  // Initialize with empty arrays
     movie_carousels: [],
     series_carousels: [],
   });
-  const [itemObjectList1, setItemObjectList1] = useState<any[]>([]);
+  const [itemObjectList1, setItemObjectList1] = usePersistentState<any[]>('itemObjectList1', []);
 
   return (
     <Algorithm1Context.Provider value={{ carouselObjects1, itemObjectList1, setCarouselObjects1, setItemObjectList1 }}>

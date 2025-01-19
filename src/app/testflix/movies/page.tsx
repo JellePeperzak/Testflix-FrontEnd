@@ -14,8 +14,8 @@ export default function TestFlixMoviesPage() {
   const {algorithmOrder, currentAlgorithmIndex} = useCurrentAlgorithmContext();
 
   useEffect(() => {
-    if (pageType != "Testflix") {
-      setPageType("Testflix")
+    if (pageType != "Movies") {
+      setPageType("Movies")
     }
     // Track whether user used this page for the task
     const taskKeyName = `task${taskOrder[currentTaskIndex]}_movie`

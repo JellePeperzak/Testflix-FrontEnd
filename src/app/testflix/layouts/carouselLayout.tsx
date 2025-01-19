@@ -4,6 +4,7 @@ import { useAlgorithm1Context } from '@/app/context/Algorithm1Context';
 import { useAlgorithm2Context } from '@/app/context/Algorithm2Context';
 import { useAlgorithm3Context } from '@/app/context/Algorithm3Context';
 import { useCurrentAlgorithmContext } from '@/app/context/CurrentAlgorithmContext';
+import { useTaskContext } from '@/app/context/TaskContext';
 
 import Carousel, { CarouselProps } from '@/app/components/items/ItemCarousel';
 
@@ -24,10 +25,14 @@ export default function CarouselLayout({ contentType }: CarouselLayoutProps) {
     const { carouselObjects1 } = useAlgorithm1Context()
     const { carouselObjects2 } = useAlgorithm2Context()
     const { carouselObjects3 } = useAlgorithm3Context()
-    const { currentAlgorithmIndex, algorithmOrder } = useCurrentAlgorithmContext();
+    const { currentAlgorithmIndex, algorithmOrder, algorithmInitialized } = useCurrentAlgorithmContext();
 
 
     useEffect(() => {
+        if (!algorithmInitialized) {
+            return
+        };
+
         function generatePage(carouselObject:CarouselObjects) {
             switch(contentType) {
                 case "Home":
@@ -48,7 +53,6 @@ export default function CarouselLayout({ contentType }: CarouselLayoutProps) {
                     break;
             }
         }
-
         switch(algorithmOrder[currentAlgorithmIndex]) {
             case 1:
                 generatePage(carouselObjects1)
@@ -63,8 +67,8 @@ export default function CarouselLayout({ contentType }: CarouselLayoutProps) {
                 setFilteredData(null);
                 setLoading(false)
                 break;
-          }
-    }, [currentAlgorithmIndex])
+        }
+    }, [algorithmInitialized, currentAlgorithmIndex])
 
     return (
       <div>

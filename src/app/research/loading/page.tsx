@@ -27,7 +27,9 @@ export default function LoadingPage() {
     if (pageType !== "Research") {
       setPageType("Research")
     }
+  }, [pageType])
 
+  useEffect(() => {
     const createDataContext = async () => {
       try {
         // API call to trigger data storage and catalogue generation on the server
@@ -57,6 +59,11 @@ export default function LoadingPage() {
             setItemObjectList3(data.algorithm3['item_object_list'])
 
             // Initialize the Task- and algorithm order data
+            console.log(`task order: ${data.task_order}`)
+            console.log(`task order type: ${typeof data.task_order}`)
+            console.log(`algorithm order: ${data.algorithm_order}`)
+            console.log(`algorithm order type: ${typeof data.algorithm_order}`)
+
             setTaskOrder(data.task_order);
             setCurrentTaskIndex(0);
             setAlgorithmOrder(data.algorithm_order);

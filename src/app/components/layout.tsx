@@ -12,9 +12,13 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
     const { pageType } = usePageContext();
 
+    // Testflix-related pages should have their own pageType identifier so that the header menu
+    // knows what menu option to highlight
+    const testflixPages = ['Home', 'Movies', 'TV Shows', 'Search']
+
     return (
       <>
-        {pageType == 'Testflix' && (
+        {testflixPages.includes(pageType) && (
             <HeaderMenu />
         )}
         <main>{children}</main>

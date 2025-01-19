@@ -23,7 +23,7 @@ export default function PreferencePage() {
         if (pageType !== "Research") {
           setPageType("Research")
         }
-    }, []);
+    }, [pageType]);
 
     // itemData should be a list of format [imdb_id, title, banner_url]
     const handleItemClick = (itemData: string[]) => {

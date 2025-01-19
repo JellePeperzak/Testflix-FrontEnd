@@ -1,9 +1,12 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+
+import { usePersistentState } from '../hooks/usePersistentState';
 
 // Define the type for the context value
 type CurrentAlgorithmContextType = {
   currentAlgorithmIndex: number;
   algorithmOrder: number[];
+  algorithmInitialized: boolean;
   setCurrentAlgorithmIndex: (currentAlgorithmIndex: number) => void;
   setAlgorithmOrder: (algorithmOrder: number[]) => void;
 };
@@ -13,11 +16,18 @@ const CurrentAlgorithmContext = createContext<CurrentAlgorithmContextType | unde
 
 // Create a provider component
 export const CurrentAlgorithmProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [currentAlgorithmIndex, setCurrentAlgorithmIndex] = useState<number>(0); // You can initialize the digit as needed (e.g., 0)
-  const [algorithmOrder, setAlgorithmOrder] = useState<number[]>([]);
+  const [currentAlgorithmIndex, setCurrentAlgorithmIndex] = usePersistentState<number>('currentAlgorithmIndex', 0); // You can initialize the digit as needed (e.g., 0)
+  const [algorithmOrder, setAlgorithmOrder] = usePersistentState<number[]>('algorithmOrder', []);
+  const [algorithmInitialized, setAlgorithmInitialized] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (algorithmOrder.length > 0 && currentAlgorithmIndex !== undefined) {
+      setAlgorithmInitialized(true);
+    }
+  }, [algorithmOrder, currentAlgorithmIndex])
 
   return (
-    <CurrentAlgorithmContext.Provider value={{ currentAlgorithmIndex, algorithmOrder, setCurrentAlgorithmIndex, setAlgorithmOrder }}>
+    <CurrentAlgorithmContext.Provider value={{ currentAlgorithmIndex, algorithmOrder, algorithmInitialized, setCurrentAlgorithmIndex, setAlgorithmOrder }}>
       {children}
     </CurrentAlgorithmContext.Provider>
   );

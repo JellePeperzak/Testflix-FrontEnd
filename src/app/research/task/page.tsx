@@ -9,8 +9,8 @@ import { usePageContext } from "@/app/context/PageTypeContext";
 import LayoutResearch from "../layout/LayoutResearch";
 
 export default function TaskPage() {
-    const {taskOrder, currentTaskIndex} = useTaskContext();
-    const {dataToStore, setDataToStore, participantNumber} = useBackendDataContext();
+    const {taskOrder, currentTaskIndex, taskInitialized} = useTaskContext();
+    const {dataToStore, setDataToStore} = useBackendDataContext();
     const {pageType, setPageType} = usePageContext();
 
     const router = useRouter();
@@ -19,7 +19,7 @@ export default function TaskPage() {
         if (pageType !== "Research") {
             setPageType("Research")
         }
-    }, []);
+    }, [pageType]);
 
     const tasks: { [key: number]: string } = {
         1: "This is the description of task 1. Please execute this task as well as you possibly can.",
@@ -31,7 +31,7 @@ export default function TaskPage() {
         const currentTime = Date.now()
         switch (taskOrder[currentTaskIndex]) {
             case 1:
-                setPageType("Testflix")
+                setPageType("Home")
                 setDataToStore({
                     ...dataToStore,
                     task1_start: currentTime
@@ -39,7 +39,7 @@ export default function TaskPage() {
                 router.push('/testflix')
                 break;
             case 2: 
-                setPageType("Testflix")
+                setPageType("Home")
                 setDataToStore({
                     ...dataToStore,
                     task2_start: currentTime
@@ -47,7 +47,7 @@ export default function TaskPage() {
                 router.push('/testflix')
                 break;
             case 3: 
-                setPageType("Testflix")
+                setPageType("Home")
                 setDataToStore({
                     ...dataToStore,
                     task3_start: currentTime

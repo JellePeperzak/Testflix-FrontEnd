@@ -1,4 +1,6 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, ReactNode } from "react";
+
+import { usePersistentState } from "../hooks/usePersistentState";
 
 interface PageContextProps {
     pageType: string;
@@ -8,7 +10,7 @@ interface PageContextProps {
 const PageContext = createContext<PageContextProps | undefined>(undefined);
 
 export const PageProvider: React.FC<{ children: ReactNode}> = ({ children }) => {
-    const [pageType, setPageType] = useState<string>("Research");
+    const [pageType, setPageType] = usePersistentState<string>('pageType', "Research");
 
     return (
         <PageContext.Provider value={{ pageType, setPageType }}>

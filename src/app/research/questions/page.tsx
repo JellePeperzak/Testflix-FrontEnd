@@ -66,7 +66,7 @@ export default function QuestionnaireExperience() {
         if (pageType !== "Research") {
           setPageType("Research")
         }
-    }, []);
+    }, [pageType]);
 
     const handleResponseChange = (name: string, value: number) => {
         setResponses((prevResponses) => ({

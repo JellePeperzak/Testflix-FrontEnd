@@ -16,9 +16,9 @@ export default function TestFlixHomePage() {
   const {pageType, setPageType} = usePageContext()
 
   useEffect(() => {
-    if (pageType != "Testflix") 
-      {setPageType("Testflix")}      
-  }, [])
+    if (pageType != "Home") 
+      {setPageType("Home")}      
+  }, [pageType])
 
   return (
         <CarouselLayout contentType={"Home"}/>
