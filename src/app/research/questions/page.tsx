@@ -124,7 +124,7 @@ export default function QuestionnaireExperience() {
             }
 
             // API call to trigger data storage
-            const response = await fetch('http://127.0.0.1:5000/api/update-database', {
+            const response = await fetch(process.env.NEXT_PUBLIC_API_URL + '/update-database', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

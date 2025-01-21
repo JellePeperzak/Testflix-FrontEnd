@@ -33,7 +33,7 @@ export default function LoadingPage() {
     const createDataContext = async () => {
       try {
         // API call to trigger data storage and catalogue generation on the server
-        const response = await fetch('http://127.0.0.1:5000/api/generate-data', {
+        const response = await fetch(process.env.NEXT_PUBLIC_API_URL + '/generate-data', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
