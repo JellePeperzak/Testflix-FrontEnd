@@ -17,9 +17,9 @@ const HeaderMenu: React.FC = () => {
     ]
 
     return (
-        <div className="sticky top-0 h-auto min-h-[70px] z-[99]">
-            <div className="relative left-0 right-0 top-0 z-1 bg-[#141414]">
-                <div className="relative flex height-header-menu bg-gradient-header-menu items-center p-header-menu text-size-header-menu z-2">
+        <div className="sticky top-0 h-auto min-h-[70px] z-40">
+            <div className="relative left-0 right-0 top-0 bg-[#141414]">
+                <div className="relative flex height-header-menu bg-gradient-header-menu items-center p-header-menu text-size-header-menu">
                     <Link 
                         href={"/testflix"}
                         className="inline-block align-middle mr-header-logo "

@@ -1,8 +1,8 @@
 'use client'
 
 import Item, { ItemProps } from './ItemCard';
-import useResponsiveWidth from '@/app/hooks/useResponsiveWidth';
-import { useState } from 'react';
+import useResponsiveJumpDistance from '@/app/hooks/useResponsiveJumpDistance';
+import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 
 export interface CarouselProps {
     item_type: string;
@@ -15,31 +15,62 @@ const Carousel: React.FC<CarouselProps> = ({ item_type, genre, rank, items }) =>
     const [currentIndex, setCurrentIndex] = useState(0);
     const [carouselFinished, setCarouselFinished] = useState(false);
     const [carouselStart, setCarouselStart] = useState(true);
+    const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);  // Track the hovered item index
 
-    const width: number  = useResponsiveWidth();
+    const jumpDistance: number = useResponsiveJumpDistance();
 
     const transitionStyles: { transition: string, transform: string } = {
         transition: 'transform .54s cubic-bezier(.5,0,.1,1) 0s',
         transform: `translate(-${currentIndex * 100}%)`
     }
 
+    const zIndexState: number[] = useMemo(() => {
+        return items.map((_, index) => (index === hoveredIndex ? 50 : 0)); // Only set z-index to 30 when hovered
+    }, [hoveredIndex]); // Recompute when hoveredIndex changes
+
+    const timersRef = useRef<(NodeJS.Timeout | null)[]>(new Array(items.length).fill(null)); // Store individual timers for each item
+
+    useEffect(() => {
+        // Cleanup all timers when the component unmounts or updates
+        return () => {
+            timersRef.current.forEach(timer => {
+                if (timer) {
+                    clearTimeout(timer);
+                }
+            });
+        };
+    }, []);
+
+    // Memoize mouse enter event handler
+    const handleMouseEnter = useCallback((index: number) => {
+        // Clear any existing timer for this item
+        if (timersRef.current[index]) {
+            clearTimeout(timersRef.current[index]);
+        }
+
+        // Set a timeout to update the hovered index after 400ms
+        timersRef.current[index] = setTimeout(() => {
+            setHoveredIndex(index);  // Set the hovered index to apply the z-index change
+        }, 400);
+    }, []);
+
+    // Memoize mouse leave event handler
+    const handleMouseLeave = useCallback((index: number) => {
+        if (timersRef.current[index]) {
+            clearTimeout(timersRef.current[index]); // Clear existing timeout
+        }
+
+        // Set a timeout to reset the z-index after 300ms for the hovered item
+        timersRef.current[index] = setTimeout(() => {
+            if (hoveredIndex === index) {
+                setHoveredIndex(null);  // Reset hovered index after 300ms
+            }
+        }, 300);
+    }, [hoveredIndex]);
+
     // Update the useResponsiveWidth function so that it returns all information needed
     // to determine whether position of items needs to be readjusted after window resizing.
     const handleClick = (direction: string) => {
-        let jumpDistance: number;
-
-        if (width < 500) {
-            jumpDistance = 2
-        } else if (width < 800) {
-            jumpDistance = 3
-        } else if (width < 1100) {
-            jumpDistance = 4
-        } else if (width < 1400) {
-            jumpDistance = 5
-        } else {
-            jumpDistance = 6
-        }
-
         switch(direction) {
             case 'left': 
                 setCarouselFinished(false);
@@ -79,10 +110,30 @@ const Carousel: React.FC<CarouselProps> = ({ item_type, genre, rank, items }) =>
                         <div className="overflow-x-visible pb-px">
                             <div className="whitespace-nowrap relative">
                                 {items.map((item, index) => (
-                                    <div className={`carousel-item box-border inline-block px-[0.2vw] relative align-top whitespace-normal ${index === 0 ? 'pl-0' : ''} group hover:z-10 z-1`}
+                                    <div 
+                                        className={`carousel-item box-border inline-block px-[0.2vw] relative align-top whitespace-normal ${index === 0 ? 'pl-0' : ''}`}
                                         key={index}
-                                        style={transitionStyles}>
-                                        <Item key={`${item['tvdb_id']}${index}`} tvdb_id={item["tvdb_id"]} item_type={item["item_type"]} title={item["title"]} year={item["year"]} genres={item["genres"]} runtime={item["runtime"]} actors={item["actors"]} pg_rating={item["pg_rating"]} banner_url={item["banner_url"]} season_count={item["season_count"]} />
+                                        onMouseEnter={() => handleMouseEnter(index)}  // Set hovered item index on hover
+                                        onMouseLeave={() => handleMouseLeave(index)}  // Reset hovered item index on leave
+                                        style={{
+                                            ...transitionStyles,
+                                            zIndex: zIndexState[index] // Dynamically apply z-index
+                                        }}
+                                    >
+                                        <Item 
+                                            key={`${item['tvdb_id']}${index}`} 
+                                            tvdb_id={item["tvdb_id"]} item_type={item["item_type"]} 
+                                            title={item["title"]} 
+                                            year={item["year"]} 
+                                            genres={item["genres"]} 
+                                            runtime={item["runtime"]} 
+                                            actors={item["actors"]} 
+                                            pg_rating={item["pg_rating"]} 
+                                            banner_url={item["banner_url"]} 
+                                            file_id={item["file_id"]}
+                                            season_count={item["season_count"]} 
+                                            originTransform={index === currentIndex ? 'left' : index === (currentIndex + (jumpDistance-1)) ? 'right' : null}
+                                        />
                                     </div>
                                 ))}
                             </div>

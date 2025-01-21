@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from "react";
+import {Fragment, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import { useTaskContext } from "@/app/context/TaskContext";
@@ -69,10 +69,10 @@ export default function QuestionnaireExperience() {
     }, [pageType]);
 
     const handleResponseChange = (name: string, value: number) => {
-        setResponses((prevResponses) => ({
-            ...prevResponses,
+        setResponses({
+            ...responses,
             [name]: value,
-        }));
+        });
     };
 
     const handleFormSubmit = async (e: React.FormEvent) => {
@@ -163,14 +163,14 @@ export default function QuestionnaireExperience() {
     }
 
     return (
-        <LayoutResearch title="What do you think?">
-            <div className="flex flex-col w-fit items-center mx-auto">
-                <p>Below you will find 23 statements. Please respond to them based on the task you have just performed.</p>
-                <p>Response count: {Object.keys(responses).length}</p>
-            </div>
-            <form className="flex flex-col" onSubmit={handleFormSubmit}>
-                <QuestionList statementObjects={[gratStatements, evalStatements]} handleResponseChange={handleResponseChange} />
+        <div className="layout-research">
+            <div className="fixed bg-[#141414] bg-gradient-header-menu w-full h-fit pb-[1em] z-10">
+                <h1 className="text-[#E50914] font-bold">What do you think?</h1>
+                <p className="text-center">Below you will find 23 statements. Please respond to them based on the task you have just performed.</p>
                 {!responseCheck && <p className="text-red-500 text-center">Please respond to all statements before continuing</p>}
+            </div>
+            <form className="flex flex-col mt-[10rem]" onSubmit={handleFormSubmit}>
+                <QuestionList statementObjects={[gratStatements, evalStatements]} handleResponseChange={handleResponseChange} />
                 <button
                     type="submit"
                     className="w-fit self-center bg-black text-[#E50914] text-[125%] font-bold px-[1em] py-[0.5em] mt-[1em] mb-[2em] rounded-lg"
@@ -178,7 +178,7 @@ export default function QuestionnaireExperience() {
                     CONTINUE
                 </button>
             </form>
-        </LayoutResearch>
+        </div>
     );
 };
 
@@ -202,35 +202,32 @@ function QuestionList({ statementObjects, handleResponseChange }: QuestionListPr
 
             {/* GRATIFICATION STATEMENT ROWS */}
             {statementObjects && statementObjects[0]['statements'].map((statement, index) => (
-                <>
+                <Fragment key={`div-${statementObjects[0]['statementType']}${index+1}`}>
                     <div 
-                        key={`div-${statementObjects[0]['statementType']}${index+1}`}
                         className="flex items-center "    
                     >
                         <p>{statement}</p>
                     </div>
                     <LikertInput 
-                        key={`likertinput-${statementObjects[0]['statementType']}${index+1}`} 
                         inputName={`${statementObjects[0]['statementType']}_${index+1}_${algorithmOrder[currentAlgorithmIndex]}`} 
                         size={5} 
                         handleResponseChange={handleResponseChange}
                     />
-                </>
+                </Fragment>
             ))}
 
             {/* GRATIFICATION STATEMENT ROWS */}
             {statementObjects && statementObjects[1]['statements'].map((statement, index) => (
-                <>
-                    <div key={`div-${statementObjects[1]['statementType']}${index+1}`}>
+                <Fragment key={`div-${statementObjects[1]['statementType']}${index+1}`}>
+                    <div>
                         <p>{statement}</p>
                     </div>
                     <LikertInput 
-                        key={`likertinput-${statementObjects[1]['statementType']}${index+1}`} 
                         inputName={`${statementObjects[1]['statementType']}_${index+1}_${algorithmOrder[currentAlgorithmIndex]}`} 
                         size={5} 
                         handleResponseChange={handleResponseChange}
                     />
-                </>
+                </Fragment>
             ))}
 
         </div>

@@ -25,7 +25,7 @@ export default function PreferencePage() {
         }
     }, [pageType]);
 
-    // itemData should be a list of format [imdb_id, title, banner_url]
+    // itemData should be a list of format [imdb_id, title, file_id]
     const handleItemClick = (itemData: string[]) => {
         setErrorMessage(null)
         const isSelected = selectedItems.some(
@@ -62,13 +62,13 @@ export default function PreferencePage() {
 
     return (
         <div className="layout-research">
-            <div className="fixed bg-[#141414] bg-gradient-header-menu w-full h-fit z-50">
+            <div className="fixed bg-[#141414] bg-gradient-header-menu w-full h-fit pb-[1em] z-10">
                 <h1 className="text-[#E50914] font-bold">Give your Preference</h1>
                 <p className="text-center">Below you see a selection of 36 programmes. Please select the 5 programmes that you like best from this selection.</p>
-                {errorMessage && <p className="text-red-500 text-center my-[1em]">{errorMessage}</p>}
+                {errorMessage && <p className="text-red-500 text-center mt-[1em]">{errorMessage}</p>}
             </div>
             
-            <div className="mt-[10rem] mx-0 mb-0 pt-[2%] min-h-[65px] pb-[0%] z-10">
+            <div className="mt-[10rem] mx-0 mb-0 pt-[2%] min-h-[65px] pb-[0%]">
                     <PreferenceGrid selectedItems={selectedItems} handleItemClick={handleItemClick}/>
             </div>
             
@@ -76,13 +76,14 @@ export default function PreferencePage() {
                 <h2 className="ml-[2em] text-research-subheader">Your Selected Items</h2>
                 <div className="grid overflow-hidden gap-y-[1vw] gap-x-0 mt-[10px] mb-[3rem] leading-[1.6] grid-search-media-dependend">
                     {selectedItems && selectedItems.map((itemData, index) => (
-                        <div className={`box-border inline-block px-[0.2vw] relative align-top whitespace-normal ${index === 0 ? 'pl-0' : ''} hover:z-10 z-1`}
+                        <div className={`box-border inline-block px-[0.2vw] relative align-top whitespace-normal ${index === 0 ? 'pl-0' : ''}`}
                             key={index}>
                             <ItemPreferenceCard 
                                 key={`${itemData[0]}${index}`} 
                                 imdb_id={itemData[0]} 
                                 title={itemData[1]} 
                                 banner_url={itemData[2]}
+                                file_id={itemData[2]}
                                 selectedItems={selectedItems}
                                 handleItemClick={handleItemClick}
                             />
@@ -118,6 +119,7 @@ function PreferenceGrid({ selectedItems, handleItemClick }: PreferenceGridProps)
                         imdb_id={item['imdb_id']} 
                         title={item['title']} 
                         banner_url={item['banner_url']}
+                        file_id={item['file_id']}
                         selectedItems={selectedItems}
                         handleItemClick={handleItemClick}
                     />

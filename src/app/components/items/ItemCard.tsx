@@ -19,11 +19,13 @@ export interface ItemProps {
     actors?: string
     pg_rating: string
     banner_url: string
+    file_id: string
     season_count: string
     score?: number
+    drive_id?: string
 };
 
-const Item: React.FC<ItemProps> = ({ banner_url, item_type, title, pg_rating, genres, runtime, season_count}) => {
+const Item: React.FC<ItemProps & { originTransform?: string | null}> = ({ banner_url, file_id, item_type, title, pg_rating, genres, runtime, season_count, originTransform=null}) => {
     const [isDelayedHovered, setIsDelayedHovered] = useState(false);
     const [runtimeFormatted, setRuntimeFormatted] = useState(`${runtime}m`)
     const timeoutId = useRef<NodeJS.Timeout | null>(null);
@@ -91,18 +93,19 @@ const Item: React.FC<ItemProps> = ({ banner_url, item_type, title, pg_rating, ge
     }
     
     return (
-        <div className={`relative w-fit h-auto rounded bg-[#242424] transition-all duration-300 ${isDelayedHovered ? 'translate-y-[-60%] scale-[1.4]  h-[calc(200%)] z-100 card-shaded-top' : 'z-10'}`}
+        <div className={`relative w-fit h-auto rounded bg-[#242424] transition-all duration-300 ${isDelayedHovered && 'translate-y-[-60%] scale-[1.4]  h-[calc(200%)] card-shaded-top'} ${originTransform && `origin-${originTransform}`}`}
             onMouseLeave={handleMouseLeave}
             onMouseEnter={() => {
                 handleMouseEnter();
             }}
         >
             <Image
-                src={banner_url}
+                src={`https://drive.google.com/uc?id=${file_id}`}
                 width={1920}
                 height={1080}
                 alt={`${title}`}
                 className={isDelayedHovered ? 'rounded-t' : 'rounded cursor-pointer'}
+                loading='lazy'
                 
             />
             <div className={`absolute card-grid-container w-full h-fit top-full -mt-1 left-0 bg-[#181818] p-[16px] rounded-b card-shaded-bottom transition-opacity ${isDelayedHovered ? 'opacity-1' : 'opacity-0 pointer-events-none'}`}>

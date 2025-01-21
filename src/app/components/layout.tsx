@@ -21,7 +21,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         {testflixPages.includes(pageType) && (
             <HeaderMenu />
         )}
-        <main>{children}</main>
+        <main className="z-0">{children}</main>
       </>
     );
   };

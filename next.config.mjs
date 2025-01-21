@@ -9,6 +9,11 @@ const nextConfig = {
                 hostname: 'artworks.thetvdb.com',
                 pathname: '/banners/**',
             },
+            {
+                protocol: 'https',
+                hostname: 'drive.google.com',
+                pathname: '/**',
+            },
         ],
     },
     reactStrictMode: false,

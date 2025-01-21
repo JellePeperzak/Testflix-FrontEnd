@@ -8,12 +8,13 @@ export interface PreferenceItemProps {
     imdb_id: string;
     title: string;
     banner_url: string;
+    file_id: string;
     handleItemClick: (itemData: string[]) => void;
     selectedItems: string[][];
     [key: string]: any;
 }
 
-const ItemPreferenceCard: React.FC<PreferenceItemProps> = ({ imdb_id, title, banner_url, handleItemClick, selectedItems }) => {
+const ItemPreferenceCard: React.FC<PreferenceItemProps> = ({ imdb_id, title, banner_url, file_id, handleItemClick, selectedItems }) => {
     const [itemIsHovered, setItemIsHovered] = useState<boolean>(false);
     const [iconIsHovered, setIconIsHovered] = useState<boolean>(false);
     const [selected, setSelected] = useState<boolean>(false);
@@ -23,7 +24,7 @@ const ItemPreferenceCard: React.FC<PreferenceItemProps> = ({ imdb_id, title, ban
             (item) =>
                 item[0] === imdb_id &&
                 item[1] === title &&
-                item[2] === banner_url
+                item[2] === file_id
         );
         setSelected(isSelected);
     }, [selectedItems])
@@ -35,12 +36,12 @@ const ItemPreferenceCard: React.FC<PreferenceItemProps> = ({ imdb_id, title, ban
             onMouseEnter={() => setItemIsHovered(true)}
             onClick={() => {
                 if (!selected) {
-                    handleItemClick([imdb_id, title, banner_url]);
+                    handleItemClick([imdb_id, title, file_id]);
                 }
             }}
         >
             <Image
-                src={banner_url}
+                src={`https://drive.google.com/uc?id=${file_id}`}
                 width={1920}
                 height={1080}
                 alt={`${title}`}
@@ -59,7 +60,7 @@ const ItemPreferenceCard: React.FC<PreferenceItemProps> = ({ imdb_id, title, ban
                         className={`flex h-[3rem] w-[3rem] ${iconIsHovered ? 'bg-[#b20811] border-[#b20811]' : 'bg-[#E50914] border-[#E50914]'} border-[0.13em] rounded-full items-center justify-center cursor-pointer transition-colors`}
                         onMouseLeave={() => setIconIsHovered(false)}
                         onMouseEnter={() => setIconIsHovered(true)}
-                        onClick={() => handleItemClick([imdb_id, title, banner_url])}
+                        onClick={() => handleItemClick([imdb_id, title, file_id])}
                     >
                         <i className={`fas ${iconIsHovered ? 'fa-x' : 'fa-check'}`}/>
                     </div>
