@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useRef, useMemo, useCallback } from "react"
+import { useEffect, useState, useRef, useMemo, useCallback, Suspense } from "react"
 import { usePageContext } from "@/app/context/PageTypeContext"
 import { useSearchParams } from "next/navigation";
 import { useCurrentAlgorithmContext } from "@/app/context/CurrentAlgorithmContext";
@@ -59,7 +59,9 @@ export default function TestFlixSearchPage() {
   }, [currentTaskIndex, currentAlgorithmIndex, pageType])
 
   return (
+    <Suspense>
         <SearchPageContent />
+    </Suspense>
   )
 }
 
