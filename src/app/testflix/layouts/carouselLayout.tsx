@@ -4,7 +4,6 @@ import { useAlgorithm1Context } from '@/app/context/Algorithm1Context';
 import { useAlgorithm2Context } from '@/app/context/Algorithm2Context';
 import { useAlgorithm3Context } from '@/app/context/Algorithm3Context';
 import { useCurrentAlgorithmContext } from '@/app/context/CurrentAlgorithmContext';
-import { useTaskContext } from '@/app/context/TaskContext';
 
 import Carousel, { CarouselProps } from '@/app/components/items/ItemCarousel';
 
@@ -68,7 +67,7 @@ export default function CarouselLayout({ contentType }: CarouselLayoutProps) {
                 setLoading(false)
                 break;
         }
-    }, [algorithmInitialized, currentAlgorithmIndex])
+    }, [algorithmInitialized, currentAlgorithmIndex, algorithmOrder, carouselObjects1, carouselObjects2, carouselObjects3, contentType])
 
     return (
       <div>
@@ -87,7 +86,6 @@ export default function CarouselLayout({ contentType }: CarouselLayoutProps) {
                                 key={`${carouselObject.item_type}${carouselObject.genre}`}
                                 item_type={carouselObject.item_type}
                                 genre={carouselObject.genre}
-                                rank={carouselObject.rank}
                                 items={carouselObject.items}
                             />
                         ))}

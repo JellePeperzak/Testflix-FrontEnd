@@ -7,11 +7,10 @@ import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 export interface CarouselProps {
     item_type: string;
     genre: string;
-    rank: number;
     items: ItemProps[];
 };
 
-const Carousel: React.FC<CarouselProps> = ({ item_type, genre, rank, items }) => {
+const Carousel: React.FC<CarouselProps> = ({ item_type, genre, items }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [carouselFinished, setCarouselFinished] = useState(false);
     const [carouselStart, setCarouselStart] = useState(true);
@@ -26,7 +25,7 @@ const Carousel: React.FC<CarouselProps> = ({ item_type, genre, rank, items }) =>
 
     const zIndexState: number[] = useMemo(() => {
         return items.map((_, index) => (index === hoveredIndex ? 50 : 0)); // Only set z-index to 30 when hovered
-    }, [hoveredIndex]); // Recompute when hoveredIndex changes
+    }, [hoveredIndex, items]); // Recompute when hoveredIndex changes
 
     const timersRef = useRef<(NodeJS.Timeout | null)[]>(new Array(items.length).fill(null)); // Store individual timers for each item
 
@@ -122,15 +121,16 @@ const Carousel: React.FC<CarouselProps> = ({ item_type, genre, rank, items }) =>
                                     >
                                         <Item 
                                             key={`${item['tvdb_id']}${index}`} 
-                                            tvdb_id={item["tvdb_id"]} item_type={item["item_type"]} 
+                                            imdb_id={item['imdb_id']}
+                                            tvdb_id={item["tvdb_id"]} 
+                                            item_type={item["item_type"]} 
                                             title={item["title"]} 
                                             year={item["year"]} 
                                             genres={item["genres"]} 
                                             runtime={item["runtime"]} 
                                             actors={item["actors"]} 
-                                            pg_rating={item["pg_rating"]} 
-                                            banner_url={item["banner_url"]} 
-                                            file_id={item["file_id"]}
+                                            pg_rating={item["pg_rating"]}
+                                            image_type={item['image_type']}
                                             season_count={item["season_count"]} 
                                             originTransform={index === currentIndex ? 'left' : index === (currentIndex + (jumpDistance-1)) ? 'right' : null}
                                         />

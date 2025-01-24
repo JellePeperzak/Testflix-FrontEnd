@@ -14,7 +14,7 @@ export default function QuestionnaireDemographic() {
     const [ageValue, setAgeValue] = useState<number | undefined>();
     const [genderValue, setGenderValue] = useState<string>("");
     const [experienceValue, setExperienceValue] = useState<number | undefined>();
-    const [consumptionValue, setConsumptionValue] = useState<number | undefined>();
+    const [consumptionValue, setConsumptionValue] = useState<string>("");
     const [nationalityValue, setNationalityValue] = useState<string>("");
     const [customNationality, setCustomNationality] = useState<string>("");
     const [errorObject, setErrorObject] = useState<ErrorMessageType>({
@@ -30,7 +30,7 @@ export default function QuestionnaireDemographic() {
     useEffect(() => {
           if (pageType != "Research") 
             {setPageType("Research")}      
-    }, [pageType])
+    }, [pageType, setPageType])
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         switch(e.target.getAttribute('name')) {
@@ -47,7 +47,7 @@ export default function QuestionnaireDemographic() {
                 setExperienceValue(e.target.value ? parseInt(e.target.value, 10) : undefined);
                 break;
             case 'consumption':
-                setConsumptionValue(e.target.value ? parseInt(e.target.value, 10) : undefined);
+                setConsumptionValue(e.target.value);
                 break;
             default:
                 throw new Error(`handleInputChange did not identify the correct case for e.target.getAttribute('name')`)
@@ -79,13 +79,13 @@ export default function QuestionnaireDemographic() {
 
         // Validate nationality
         let finalNationalityValue: string;
-        if (!["Dutch", "German", "Belgian"].includes(nationalityValue) && customNationality === "") {
+        if (!["Dutch", "German", "Belgian", "NA"].includes(nationalityValue) && customNationality === "") {
             setErrorObject({
                 location: 'nationality',
                 message: "Please provide a nationality."
             });
             return;
-        } else if (!["Dutch", "German", "Belgian"].includes(nationalityValue)) {
+        } else if (!["Dutch", "German", "Belgian", "NA"].includes(nationalityValue)) {
             // If nationality is valid, determine whether to take the value from the radio input or from the Others input bar
             finalNationalityValue = customNationality;
         } else {
@@ -99,6 +99,17 @@ export default function QuestionnaireDemographic() {
             setErrorObject({
                 location: 'experience',
                 message: 'Please declare how experienced you are with video streaming services.'
+            })
+            return;
+        }
+
+        // Validate consumption
+        const consumptionElement = document.querySelector('input[name="consumption"]:checked') as HTMLInputElement;
+        if (!consumptionElement) {
+            setConsumptionValue("");
+            setErrorObject({
+                location: 'consumption',
+                message: 'Please declare how much you use video streaming services.'
             })
             return;
         }
@@ -138,7 +149,6 @@ export default function QuestionnaireDemographic() {
                     </div>
                     <div className="flex flex-col w-fit items-center">
                         <p>What gender do you identify as?</p>
-                        {errorObject.location === 'gender' && <p className="text-red-500">{errorObject.message}</p>}
                         <div className="flex flex-col w-full items-start">
                             <div className="layout-radio-horizontal">
                                 <input type="radio" name="gender" id="NA" value="NA" onChange={handleInputChange} /><label htmlFor="NA">Prefer not to say</label>
@@ -155,12 +165,15 @@ export default function QuestionnaireDemographic() {
                             <div className="layout-radio-horizontal">
                                 <input type="radio" name="gender" id="Agender" value="Agender" onChange={handleInputChange} /><label htmlFor="Agender">Agender</label>
                             </div>
-                            
                         </div>
+                        {errorObject.location === 'gender' && <p className="text-red-500">{errorObject.message}</p>}
                     </div>
                     <div className="flex flex-col w-fit items-center">
                         <p>What is your nationality?</p>
                         <div className="flex flex-col w-fit items-start">
+                            <div className="layout-radio-horizontal">
+                                <input type="radio" name="nationality" id="NA" value="NA" onChange={handleInputChange}/><label htmlFor="NA">Prefer not to say</label>
+                            </div>
                             <div className="layout-radio-horizontal">
                                 <input type="radio" name="nationality" id="Dutch" value="Dutch" onChange={handleInputChange}/><label htmlFor="Dutch">Dutch</label>
                             </div>
@@ -204,11 +217,25 @@ export default function QuestionnaireDemographic() {
                         </div>
                     </div>
                     <div className="flex flex-col w-fit items-center">
-                        <p>
-                            Over the past month, how many hours have you consumed video streaming services on average per week?
-                            Please round to a whole number.
-                        </p>
-                        <input type="number" name="consumption" min="0" step="1" onChange={handleInputChange} required/>
+                        <p>How many hours do you spend using video streaming services on average per week?</p>
+                        <div className="flex flex-col w-full items-start">
+                            <div className="layout-radio-horizontal">
+                                <input type="radio" name="consumption" id="<3" value="<3>" onChange={handleInputChange} /><label htmlFor="<3">Less than 3 hours</label>
+                            </div>
+                            <div className="layout-radio-horizontal">
+                                <input type="radio" name="consumption" id="3-6" value="3-6" onChange={handleInputChange} /><label htmlFor="3-6">Between 3 and 6 hours</label>
+                            </div>
+                            <div className="layout-radio-horizontal">
+                                <input type="radio" name="consumption" id="6-9" value="6-9" onChange={handleInputChange} /><label htmlFor="6-9">Between 6 and 9 hours</label>
+                            </div>
+                            <div className="layout-radio-horizontal">
+                                <input type="radio" name="consumption" id="9-12" value="9-12" onChange={handleInputChange} /><label htmlFor="9-12">Between 9 and 12 hours</label>
+                            </div>
+                            <div className="layout-radio-horizontal">
+                                <input type="radio" name="consumption" id=">12" value=">12" onChange={handleInputChange} /><label htmlFor=">12">More than 12 hours</label>
+                            </div>
+                        </div>
+                        {errorObject.location === 'consumption' && <p className="text-red-500">{errorObject.message}</p>}
                     </div>
                     {errorObject.location === 'general' && <p className="text-red-500 text-center">{errorObject.message}</p>}
                     <button 

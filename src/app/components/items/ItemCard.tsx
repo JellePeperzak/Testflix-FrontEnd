@@ -10,6 +10,7 @@ import { useTaskContext } from '@/app/context/TaskContext';
 import { useBackendDataContext } from '@/app/context/BackendDataContext';
 
 export interface ItemProps {
+    imdb_id: string
     tvdb_id?: string
     item_type: string
     title: string
@@ -18,14 +19,12 @@ export interface ItemProps {
     runtime: string
     actors?: string
     pg_rating: string
-    banner_url: string
-    file_id: string
+    image_type: string
     season_count: string
     score?: number
-    drive_id?: string
 };
 
-const Item: React.FC<ItemProps & { originTransform?: string | null}> = ({ banner_url, file_id, item_type, title, pg_rating, genres, runtime, season_count, originTransform=null}) => {
+const Item: React.FC<ItemProps & { originTransform?: string | null}> = ({ imdb_id, image_type, item_type, title, pg_rating, genres, runtime, season_count, originTransform=null}) => {
     const [isDelayedHovered, setIsDelayedHovered] = useState(false);
     const [runtimeFormatted, setRuntimeFormatted] = useState(`${runtime}m`)
     const timeoutId = useRef<NodeJS.Timeout | null>(null);
@@ -44,7 +43,7 @@ const Item: React.FC<ItemProps & { originTransform?: string | null}> = ({ banner
             const minutes = runtimeNumber % 60;
             setRuntimeFormatted(`${hours}h ${minutes}m`)
         }
-    }, []);
+    }, [runtime]);
 
     const handleMouseEnter = () => {
         timeoutId.current = setTimeout(() => {
@@ -99,20 +98,8 @@ const Item: React.FC<ItemProps & { originTransform?: string | null}> = ({ banner
                 handleMouseEnter();
             }}
         >
-            {/*
-            TODO: Change from Google Drive to hosted images
-             <Image
-                src={`https://thesis.streamwebsite.nl/thumbnails/${imdb_id}.jpg`}
-                width={1920}
-                height={1080}
-                alt={`${title}`}
-                className={isDelayedHovered ? 'rounded-t' : 'rounded cursor-pointer'}
-                loading='lazy'
-                
-            /> 
-            */}
             <Image
-                src={`https://drive.google.com/uc?id=${file_id}`}
+                src={`https://thesis.streamwebsite.nl/thumbnails/${imdb_id}.${image_type}`}
                 width={1920}
                 height={1080}
                 alt={`${title}`}

@@ -14,6 +14,11 @@ const nextConfig = {
                 hostname: 'drive.google.com',
                 pathname: '/**',
             },
+            {
+                protocol: 'https',
+                hostname: 'thesis.streamwebsite.nl',
+                pathname: '/**',
+            },
         ],
     },
     reactStrictMode: false,

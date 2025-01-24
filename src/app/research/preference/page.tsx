@@ -23,9 +23,9 @@ export default function PreferencePage() {
         if (pageType !== "Research") {
           setPageType("Research")
         }
-    }, [pageType]);
+    }, [pageType, setPageType]);
 
-    // itemData should be a list of format [imdb_id, title, file_id]
+    // itemData should be a list of format [imdb_id, title, image_type]
     const handleItemClick = (itemData: string[]) => {
         setErrorMessage(null)
         const isSelected = selectedItems.some(
@@ -64,7 +64,7 @@ export default function PreferencePage() {
         <div className="layout-research">
             <div className="fixed bg-[#141414] bg-gradient-header-menu w-full h-fit pb-[1em] z-10">
                 <h1 className="text-[#E50914] font-bold">Give your Preference</h1>
-                <p className="text-center">Below you see a selection of 36 programmes. Please select the 5 programmes that you like best from this selection.</p>
+                <p className="text-center">Below you see a selection of 36 programmes. Please select the 3 to 5 programmes that you like best from this selection.</p>
                 {errorMessage && <p className="text-red-500 text-center mt-[1em]">{errorMessage}</p>}
             </div>
             
@@ -73,7 +73,7 @@ export default function PreferencePage() {
             </div>
             
             <div className="mx-[4%]">
-                <h2 className="ml-[2em] text-research-subheader">Your Selected Items</h2>
+                <h2 className="ml-[2em] text-research-subheader">Your Selected Items{selectedItems.length !== 0 && ` (${selectedItems.length})`}</h2>
                 <div className="grid overflow-hidden gap-y-[1vw] gap-x-0 mt-[10px] mb-[3rem] leading-[1.6] grid-search-media-dependend">
                     {selectedItems && selectedItems.map((itemData, index) => (
                         <div className={`box-border inline-block px-[0.2vw] relative align-top whitespace-normal ${index === 0 ? 'pl-0' : ''}`}
@@ -82,8 +82,7 @@ export default function PreferencePage() {
                                 key={`${itemData[0]}${index}`} 
                                 imdb_id={itemData[0]} 
                                 title={itemData[1]} 
-                                banner_url={itemData[2]}
-                                file_id={itemData[2]}
+                                image_type={itemData[2]}
                                 selectedItems={selectedItems}
                                 handleItemClick={handleItemClick}
                             />
@@ -118,8 +117,7 @@ function PreferenceGrid({ selectedItems, handleItemClick }: PreferenceGridProps)
                         key={`${item['tvdb_id']}${index}`} 
                         imdb_id={item['imdb_id']} 
                         title={item['title']} 
-                        banner_url={item['banner_url']}
-                        file_id={item['file_id']}
+                        image_type={item['image_type']}
                         selectedItems={selectedItems}
                         handleItemClick={handleItemClick}
                     />

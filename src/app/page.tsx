@@ -22,7 +22,7 @@ export default function Home () {
   useEffect(() => {
       if (pageType != "Research") 
         {setPageType("Research")}      
-  }, [pageType])
+  }, [pageType, setPageType])
 
   const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
     setConsentGiven(e.target.checked);
@@ -68,8 +68,6 @@ export default function Home () {
             there are very few studies that include the experience of the user in these evaluation methods. 
             My study aims to improve the understanding of the relationship between user experience and the quality of service in the context of 
             video streaming services. 
-            <span className="text-pink-500">Will mentioning something about specifically looking at the influence of recommender quality influence 
-            the validity of test results?</span>
           </p>
         </div>
         

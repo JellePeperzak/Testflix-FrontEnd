@@ -9,11 +9,14 @@ import { useBackendDataContext } from '@/app/context/BackendDataContext';
 
 import { DataToStoreProps } from "@/app/components/interfaces/backendDataObject";
 
-import LayoutResearch from "../layout/LayoutResearch";
+interface statementsProps {
+    [key: number]: string;
+}
 
 interface statementObject {
-    statements: string[];
+    statements: statementsProps;
     statementType: 'grat' | 'eval';
+    statementSubType: 'Service' | 'Interface' | 'Programmes' | 'Social';
 }
 
 export default function QuestionnaireExperience() {
@@ -27,46 +30,62 @@ export default function QuestionnaireExperience() {
 
     const router = useRouter();
 
-    const gratStatements: statementObject = {
-        statements: [
-            "1. I was able to navigate and filter contents",
-            "2. The interface allowed me to watch a wide variety of programmes.",
-            "3. The interface allowed me to browse freely.",
-            "4. I feel that the interface displayed personalized content to me.",
-            "5. I feel that the service is personalized for my usage.",
-            "6. It allows me to search for videos that I’m interested in",
-            "7. Content offered by them are personalized",
-            "8. The programmes I encountered seemed exciting",
-            "9. The programmes I encountered seemed thrilling",
-            "10. The programmes I encountered seemed amusing",
-            "11. The programmes I encountered seemed engaging",
-            "12. This streaming service would allow me to connect with others",
-            "13. This streaming service could allow me to expand my social network"
-            ],
-        statementType: 'grat'
+    const cnStatements: statementObject = {
+        statements: {
+            1: "I was able to navigate and filter contents",
+            2: "The interface allowed me to watch a wide variety of programmes.",
+            3: "The interface allowed me to browse freely.",
+            4: "I feel that the interface displayed personalized content to me.",
+            5: "I feel that the service was personalized for my usage.",
+            6: "The interface allowed me to search for videos that I’m interested in",
+            7: "The content offered by the interface was personalised", 
+        },
+        statementType: 'grat',
+        statementSubType: 'Interface'
     };
 
+    const enStatements: statementObject = {
+        statements: {
+            8: "Exciting",
+            9: "Boring",
+            10: "Amusing",
+            11: "Engaging",
+        },
+        statementType: 'grat',
+        statementSubType: 'Programmes'
+    }
+
+    const seStatements: statementObject = {
+        statements: {
+            12: "This streaming service would allow me to connect with others",
+            13: "This streaming service could allow me to expand my social network"
+        },
+        statementType: 'grat',
+        statementSubType: 'Social'
+    }
+
     const evalStatements: statementObject = {
-        statements: [
-            "14. This interface gave me some really good recommendations",
-            "15. I find this interface easy to use",
-            "16. This interface is competent to help me effectively find movies and series I really like",
-            "17. I found my visit to this interface enjoyable",
-            "18. I am confident that the item I just selected is really the best choice for me",
-            "19. I easily found the information I was looking for",
-            "20. Looking for a product using this interface required too much effort",
-            "21. I trust the recommended items since they were consistent with my preferences",
-            "22. My overall satisfaction with the interface is high",
-            "23. I would watch the item I just chose if given the opportunity"
-            ],
-        statementType: 'eval'
+        statements: {
+            1: "The interface gave me some really good recommendations",
+            2: "I found the interface easy to use",
+            3: "The interface was competent to help me effectively find movies and series I really like",
+            4: "I found my visit to the interface enjoyable",
+            5: "I am confident that the item I just selected is really the best choice for me",
+            6: "I easily found the information I was looking for",
+            7: "Looking for a product using this interface required too much effort",
+            8: "I trust the recommended items since they were consistent with my preferences",
+            9: "My overall satisfaction with the interface is high",
+            10: "I would watch the item I just chose if given the opportunity"
+        },
+        statementType: 'eval',
+        statementSubType: 'Service'
     };
 
     useEffect(() => {
         if (pageType !== "Research") {
           setPageType("Research")
         }
-    }, [pageType]);
+    }, [pageType, setPageType]);
 
     const handleResponseChange = (name: string, value: number) => {
         setResponses({
@@ -170,7 +189,10 @@ export default function QuestionnaireExperience() {
                 {!responseCheck && <p className="text-red-500 text-center">Please respond to all statements before continuing</p>}
             </div>
             <form className="flex flex-col mt-[10rem]" onSubmit={handleFormSubmit}>
-                <QuestionList statementObjects={[gratStatements, evalStatements]} handleResponseChange={handleResponseChange} />
+                <QuestionList statementObject={cnStatements} handleResponseChange={handleResponseChange} />
+                <QuestionList statementObject={enStatements} handleResponseChange={handleResponseChange} />
+                <QuestionList statementObject={seStatements} handleResponseChange={handleResponseChange} />
+                <QuestionList statementObject={evalStatements} handleResponseChange={handleResponseChange} />
                 <button
                     type="submit"
                     className="w-fit self-center bg-black text-[#E50914] text-[125%] font-bold px-[1em] py-[0.5em] mt-[1em] mb-[2em] rounded-lg"
@@ -186,50 +208,52 @@ export default function QuestionnaireExperience() {
 
 
 interface QuestionListProps {
-    statementObjects: statementObject[]; // This should be an array of statementObjects
+    statementObject: statementObject; // This should be an array of statementObjects
 }
 
-function QuestionList({ statementObjects, handleResponseChange }: QuestionListProps & { handleResponseChange: (name: string, value: number) => void }) {
+function QuestionList({ statementObject, handleResponseChange }: QuestionListProps & { handleResponseChange: (name: string, value: number) => void }) {
     const {currentAlgorithmIndex, algorithmOrder} = useCurrentAlgorithmContext();
+
     return (
-        <div className="grid grid-cols-[fit-content(100%)_1fr] auto-rows-[minmax(0,_1fr)] gap-5 border-y-2 my-[1rem] py-[1rem] mx-[30rem]">
-            {/* HEADER ROW */}
-            <div/>
-            <div className="flex w-full justify-between">
-                <div><p>Strongly disagree</p></div>
-                <div><p>Strongly agree</p></div>
+        <div className="grid border-b-2 my-[2rem] mx-[30rem]">
+            {/* CATEGORY TITLE + description */}
+            <div className="grid grid-cols-3 w-full">
+                <div className="border-b-2" />
+                <p className="text-[1.5em] font-bold text-center border-x-2 border-t-2 rounded-t pt-[0.2em]">{statementObject.statementSubType}</p>
+                <div className="border-b-2" />
             </div>
 
-            {/* GRATIFICATION STATEMENT ROWS */}
-            {statementObjects && statementObjects[0]['statements'].map((statement, index) => (
-                <Fragment key={`div-${statementObjects[0]['statementType']}${index+1}`}>
-                    <div 
-                        className="flex items-center "    
-                    >
-                        <p>{statement}</p>
-                    </div>
-                    <LikertInput 
-                        inputName={`${statementObjects[0]['statementType']}_${index+1}_${algorithmOrder[currentAlgorithmIndex]}`} 
-                        size={5} 
-                        handleResponseChange={handleResponseChange}
-                    />
-                </Fragment>
-            ))}
+            {statementObject.statementSubType === 'Programmes' && (
+                <div className='w-full border-x-2 pt-[1em]'>
+                    <p className="text-center">For every word below, declare how well you think they finish the following statement:</p>
+                    <p className="text-center italic">"The programmes I encountered seemed ..."</p>
+                </div>
+            )}
 
-            {/* GRATIFICATION STATEMENT ROWS */}
-            {statementObjects && statementObjects[1]['statements'].map((statement, index) => (
-                <Fragment key={`div-${statementObjects[1]['statementType']}${index+1}`}>
-                    <div>
-                        <p>{statement}</p>
-                    </div>
-                    <LikertInput 
-                        inputName={`${statementObjects[1]['statementType']}_${index+1}_${algorithmOrder[currentAlgorithmIndex]}`} 
-                        size={5} 
-                        handleResponseChange={handleResponseChange}
-                    />
-                </Fragment>
-            ))}
+            {/* STATEMENTS */}
+            <div className="grid grid-cols-[fit-content(100%)_1fr] auto-rows-[minmax(0,_1fr)] gap-5 pt-[1.5em] pb-[1em] px-[1em] border-x-2">
+                <div />
+                <div className="flex w-full justify-between">
+                    <div><p>Strongly disagree</p></div>
+                    <div><p>Strongly agree</p></div>
+                </div>
 
+                {/* GRATIFICATION STATEMENT ROWS */}
+                {statementObject && Object.keys(statementObject.statements).map((statementNumber) => (
+                    <Fragment key={`div-${statementObject.statementType}${statementNumber}`}>
+                        <div 
+                            className="flex items-center min-w-[20em]"    
+                        >
+                            <p className="text-center">{statementObject.statements[parseInt(statementNumber)]}</p>
+                        </div>
+                        <LikertInput 
+                            inputName={`${statementObject.statementType}_${statementNumber}_${algorithmOrder[currentAlgorithmIndex]}`} 
+                            size={5} 
+                            handleResponseChange={handleResponseChange}
+                        />
+                    </Fragment>
+                ))}
+            </div>
         </div>
     )
 }

@@ -45,7 +45,7 @@ export default function TestFlixHomePage() {
         ...keyDataObject
       })
     }
-  }, [currentTaskIndex, currentAlgorithmIndex, pageType])
+  }, [currentTaskIndex, currentAlgorithmIndex, pageType, algorithmOrder, dataToStore, setDataToStore, setPageType, taskOrder])
 
   return (
         <CarouselLayout contentType={"TV Shows"}/>

@@ -43,7 +43,7 @@ export default function TestFlixMoviesPage() {
         ...keyDataObject
       })
     }
-  }, [currentTaskIndex, currentAlgorithmIndex, pageType])
+  }, [currentTaskIndex, currentAlgorithmIndex, pageType, algorithmOrder, dataToStore, setDataToStore, setPageType, taskOrder])
 
   return (
         <CarouselLayout contentType={"Movies"}/>

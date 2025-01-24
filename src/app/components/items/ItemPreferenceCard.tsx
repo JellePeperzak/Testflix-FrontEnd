@@ -7,14 +7,13 @@ import '@fortawesome/fontawesome-free/css/all.css';
 export interface PreferenceItemProps {
     imdb_id: string;
     title: string;
-    banner_url: string;
-    file_id: string;
+    image_type: string;
     handleItemClick: (itemData: string[]) => void;
     selectedItems: string[][];
     [key: string]: any;
 }
 
-const ItemPreferenceCard: React.FC<PreferenceItemProps> = ({ imdb_id, title, banner_url, file_id, handleItemClick, selectedItems }) => {
+const ItemPreferenceCard: React.FC<PreferenceItemProps> = ({ imdb_id, title, image_type, handleItemClick, selectedItems }) => {
     const [itemIsHovered, setItemIsHovered] = useState<boolean>(false);
     const [iconIsHovered, setIconIsHovered] = useState<boolean>(false);
     const [selected, setSelected] = useState<boolean>(false);
@@ -24,10 +23,10 @@ const ItemPreferenceCard: React.FC<PreferenceItemProps> = ({ imdb_id, title, ban
             (item) =>
                 item[0] === imdb_id &&
                 item[1] === title &&
-                item[2] === file_id
+                item[2] === image_type
         );
         setSelected(isSelected);
-    }, [selectedItems])
+    }, [selectedItems, image_type, imdb_id, title])
 
 
     return (
@@ -36,29 +35,17 @@ const ItemPreferenceCard: React.FC<PreferenceItemProps> = ({ imdb_id, title, ban
             onMouseEnter={() => setItemIsHovered(true)}
             onClick={() => {
                 if (!selected) {
-                    handleItemClick([imdb_id, title, file_id]);
+                    handleItemClick([imdb_id, title, image_type]);
                 }
             }}
         >
-            {/*
-            TODO: Change from Google Drive to hosted images
-             <Image
-                src={`https://thesis.streamwebsite.nl/thumbnails/${imdb_id}.jpg`}
-                width={1920}
-                height={1080}
-                alt={`${title}`}
-                className={isDelayedHovered ? 'rounded-t' : 'rounded cursor-pointer'}
-                loading='lazy'
-                
-            /> 
-            */}
             <Image
-                src={`https://drive.google.com/uc?id=${file_id}`}
+                src={`https://thesis.streamwebsite.nl/thumbnails/${imdb_id}.${image_type}`}
                 width={1920}
                 height={1080}
                 alt={`${title}`}
                 className={`rounded ${!selected && 'cursor-pointer'}`}
-                
+                loading='lazy'
             />
             {(itemIsHovered && !selected) && (
                 <div className="bg-black absolute bottom-0 left-0 w-full h-fit bg-opacity-70">
@@ -72,7 +59,7 @@ const ItemPreferenceCard: React.FC<PreferenceItemProps> = ({ imdb_id, title, ban
                         className={`flex h-[3rem] w-[3rem] ${iconIsHovered ? 'bg-[#b20811] border-[#b20811]' : 'bg-[#E50914] border-[#E50914]'} border-[0.13em] rounded-full items-center justify-center cursor-pointer transition-colors`}
                         onMouseLeave={() => setIconIsHovered(false)}
                         onMouseEnter={() => setIconIsHovered(true)}
-                        onClick={() => handleItemClick([imdb_id, title, file_id])}
+                        onClick={() => handleItemClick([imdb_id, title, image_type])}
                     >
                         <i className={`fas ${iconIsHovered ? 'fa-x' : 'fa-check'}`}/>
                     </div>

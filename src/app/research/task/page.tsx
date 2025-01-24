@@ -9,7 +9,7 @@ import { usePageContext } from "@/app/context/PageTypeContext";
 import LayoutResearch from "../layout/LayoutResearch";
 
 export default function TaskPage() {
-    const {taskOrder, currentTaskIndex} = useTaskContext();
+    const {taskOrder, currentTaskIndex, taskDescriptions} = useTaskContext();
     const {dataToStore, setDataToStore} = useBackendDataContext();
     const {pageType, setPageType} = usePageContext();
 
@@ -19,13 +19,7 @@ export default function TaskPage() {
         if (pageType !== "Research") {
             setPageType("Research")
         }
-    }, [pageType]);
-
-    const tasks: { [key: number]: string } = {
-        1: "You are looking for a movie to watch tonight. Select a movie offered by Testflix that you would watch.",
-        2: "You have finished watching your current TV show and are looking for a new series to watch. Select a series offered by Testflix that you would watch next.",
-        3: "You have a free evening and decide you want to watch something new. Select a series or movie offered by Testflix that you would watch."
-    };
+    }, [pageType, setPageType]);
 
     const handleButtonClick = () => {
         const currentTime = Date.now()
@@ -63,8 +57,9 @@ export default function TaskPage() {
         <LayoutResearch title="This Is Your Task">
             <div className="flex flex-col w-full items-center px-[15rem]">
                 <p>Please read the task below. When you're ready to start the task, click on the "Start Task" button</p>
-                <div className="border-y-[1px] py-[2em] my-[3em]">
-                    <p className="mx-[2em] font-bold text-[1.2rem]">{tasks[taskOrder[currentTaskIndex]]}</p>
+                <div className="border-y-[1px] pb-[1em] my-[3em]">
+                    <p className="text-center font-bold text-[1.4rem] pb-[0.5em] pt-[0.5em]">Task {currentTaskIndex + 1} ({currentTaskIndex + 1}/3)</p>
+                    <p className="mx-[2em] font-bold text-[1.2rem]">{taskDescriptions[taskOrder[currentTaskIndex]]}</p>
                 </div>
                 <button 
                     className="w-fit self-center bg-black text-[#E50914] text-[125%] font-bold px-[1em] py-[0.5em] mt-[1em] rounded-lg"

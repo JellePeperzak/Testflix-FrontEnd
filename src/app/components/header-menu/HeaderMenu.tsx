@@ -6,6 +6,7 @@ import { usePageContext} from '@/app/context/PageTypeContext'
 import { useState, useEffect, useRef, ChangeEvent } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { useSearchParams } from 'next/navigation'
+import { useTaskContext } from '@/app/context/TaskContext'
 
 const HeaderMenu: React.FC = () => {
     const { pageType, setPageType } = usePageContext();
@@ -15,6 +16,7 @@ const HeaderMenu: React.FC = () => {
         {url: "/testflix/tvshows", name: "TV Shows"},
         {url: "/testflix/movies", name: "Movies"},
     ]
+
 
     return (
         <div className="sticky top-0 h-auto min-h-[70px] z-40">
@@ -26,7 +28,7 @@ const HeaderMenu: React.FC = () => {
                         onClick={() => setPageType("Home")}
                     >
                         <Image 
-                            src={"/logo.png"}
+                            src={"/logo.svg"}
                             width={2226}
                             height={678}
                             alt={`Testflix Logo`}
@@ -55,6 +57,7 @@ const HeaderMenu: React.FC = () => {
                     </ul>
                     <div className="flex grow absolute top-0 right-[4%] h-full justify-end items-center">
                         <SearchBar />
+                        <TaskDescription />
                     </div>
                 </div>
             </div>
@@ -114,7 +117,7 @@ function SearchBar() {
             setSearchPage(true);
             setSearchQuery(urlVariable);
         }
-    }, [urlVariable])
+    }, [urlVariable, searchQuery])
     
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (searchQuery.length === 0 && e.target.value.length > 0) {
@@ -188,5 +191,34 @@ function SearchBar() {
     )
 }
 
+function TaskDescription() {
+    const [isHovered, setIsHovered] = useState<boolean>(false);
+
+    const { taskInitialized, taskDescriptions, taskOrder, currentTaskIndex } = useTaskContext();
+
+    useEffect(() => {
+        if (!taskInitialized) {
+            return
+        }
+    }, [taskInitialized])
+
+    return (
+        <>
+            <div
+                className="cursor-pointer w-fit h-fit ml-[1em]"
+                onMouseLeave={() => setIsHovered(false)}
+                onMouseEnter={() => setIsHovered(true)}
+            >
+                <p className="font-bold">Task</p>
+
+                {isHovered && (
+                    <div className="absolute w-[25em] top-full right-0 p-2 bg-gray-700 text-white text-sm rounded shadow-lg">
+                        {taskDescriptions[taskOrder[currentTaskIndex]]}
+                    </div>
+                )}
+            </div>
+        </>
+    )
+}
 
 export default HeaderMenu;

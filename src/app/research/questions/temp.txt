@@ -1,0 +1,73 @@
+--- REDESIGNING THE STATEMENTS ---
+-- GRATIFICATION --
+"1. I was able to navigate and filter contents",
+"2. The interface allowed me to watch a wide variety of programmes.",
+"3. The interface allowed me to browse freely.",
+"4. I feel that the interface displayed personalized content to me.",
+"5. I feel that the service was personalized for my usage.",
+"6. The interface allowed me to search for videos that I’m interested in",
+"7. The content offered by the interface was personalised",
+"8. The programmes I encountered seemed exciting",
+"9. The programmes I encountered seemed boring",
+"10. The programmes I encountered seemed amusing",
+"11. The programmes I encountered seemed engaging",
+"12. This streaming service would allow me to connect with others",
+"13. This streaming service could allow me to expand my social network"
+
+-- CATEGORIZE BY GRATIFICATION (GIVE NEW TITLES)--
+- INTERFACE -
+"1. I was able to navigate and filter contents",
+"2. The interface allowed me to watch a wide variety of programmes.",
+"3. The interface allowed me to browse freely.",
+"4. I feel that the interface displayed personalized content to me.",
+"5. I feel that the service was personalized for my usage.",
+"6. The interface allowed me to search for videos that I’m interested in",
+"7. The content offered by the interface was personalised",
+
+- PROGRAMMES -
+"8. The programmes I encountered seemed exciting",
+"9. The programmes I encountered seemed boring",
+"10. The programmes I encountered seemed amusing",
+"11. The programmes I encountered seemed engaging",
+
+- SOCIAL -
+"12. This streaming service would allow me to connect with others",
+"13. This streaming service could allow me to expand my social network"
+
+
+
+
+const gratStatements: statementObject = {
+        statements: [
+            "1. I was able to navigate and filter contents",
+            "2. The interface allowed me to watch a wide variety of programmes.",
+            "3. The interface allowed me to browse freely.",
+            "4. I feel that the interface displayed personalized content to me.",
+            "5. I feel that the service was personalized for my usage.",
+            "6. The interface allowed me to search for videos that I’m interested in",
+            "7. The content offered by the interface was personalised",
+            "8. The programmes I encountered seemed exciting",
+            "9. The programmes I encountered seemed boring",
+            "10. The programmes I encountered seemed amusing",
+            "11. The programmes I encountered seemed engaging",
+            "12. This streaming service would allow me to connect with others",
+            "13. This streaming service could allow me to expand my social network"
+            ],
+        statementType: 'grat'
+    };
+
+    const evalStatements: statementObject = {
+        statements: [
+            "14. The interface gave me some really good recommendations",
+            "15. I found the interface easy to use",
+            "16. The interface was competent to help me effectively find movies and series I really like",
+            "17. I found my visit to the interface enjoyable",
+            "18. I am confident that the item I just selected is really the best choice for me",
+            "19. I easily found the information I was looking for",
+            "20. Looking for a product using this interface required too much effort",
+            "21. I trust the recommended items since they were consistent with my preferences",
+            "22. My overall satisfaction with the interface is high",
+            "23. I would watch the item I just chose if given the opportunity"
+            ],
+        statementType: 'eval'
+    };

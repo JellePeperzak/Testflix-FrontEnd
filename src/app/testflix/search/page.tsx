@@ -56,7 +56,7 @@ export default function TestFlixSearchPage() {
         ...keyDataObject
       })
     }
-  }, [currentTaskIndex, currentAlgorithmIndex, pageType])
+  }, [currentTaskIndex, currentAlgorithmIndex, pageType, algorithmOrder, dataToStore, setDataToStore, setPageType, taskOrder])
 
   return (
     <Suspense>
@@ -102,7 +102,7 @@ function SearchPageContent() {
         setLoading(false)
         break;
     }
-  }, [currentAlgorithmIndex, algorithmInitialized])
+  }, [currentAlgorithmIndex, algorithmInitialized, algorithmOrder, itemObjectList1, itemObjectList2, itemObjectList3])
 
   useEffect(() => {
     if (itemData && searchQuery) {
@@ -144,7 +144,7 @@ function SearchGrid({ filteredData, searchQuery }: SearchGridProps) {
 
   const zIndexState: number[] = useMemo(() => {
     return filteredData.map((_, index) => (index === hoveredIndex ? 50 : 0)); // Only set z-index to 30 when hovered
-  }, [hoveredIndex]); // Recompute when hoveredIndex changes
+  }, [hoveredIndex, filteredData]); // Recompute when hoveredIndex changes
 
   const timersRef = useRef<(NodeJS.Timeout | null)[]>(new Array(filteredData.length).fill(null)); // Store individual timers for each item
 
@@ -205,13 +205,13 @@ function SearchGrid({ filteredData, searchQuery }: SearchGridProps) {
                               >
                                   <Item 
                                     key={`${item['tvdb_id']}${index}`} 
+                                    imdb_id={item['imdb_id']}
                                     tvdb_id={item["tvdb_id"]} 
                                     item_type={item["item_type"]} 
                                     title={item["title"]} year={item["year"]} 
                                     genres={item["genres"]} runtime={item["runtime"]} 
                                     actors={item["actors"]} pg_rating={item["pg_rating"]} 
-                                    banner_url={item["banner_url"]}
-                                    file_id={item['file_id']}
+                                    image_type={item['image_type']}
                                     season_count={item["season_count"]} 
                                     originTransform={(index === 0 || index % jumpDistance === 0) ? 'left' : (index === jumpDistance-1 || index % jumpDistance === jumpDistance-1) ? 'right' : null}
                                   />

@@ -20,7 +20,7 @@ export interface DataToStoreProps {
     gender?: string;
     nationality?: string;
     experience?: number;
-    consumption?: number;
+    consumption?: string;
     // Task Data
     task1_movie?: boolean;
     task1_series?: boolean;
