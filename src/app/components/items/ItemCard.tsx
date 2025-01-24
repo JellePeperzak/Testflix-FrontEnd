@@ -98,14 +98,13 @@ const Item: React.FC<ItemProps & { originTransform?: string | null}> = ({ imdb_i
                 handleMouseEnter();
             }}
         >
-            <Image
-                src={`https://thesis.streamwebsite.nl/thumbnails/${imdb_id}.${image_type}`}
+            <img
+                src={`https://thesis.streamwebsite.nl/thumbnails/webp/${imdb_id}.webp`}
                 width={1920}
                 height={1080}
                 alt={`${title}`}
                 className={isDelayedHovered ? 'rounded-t' : 'rounded cursor-pointer'}
                 loading='lazy'
-                
             />
             <div className={`absolute card-grid-container w-full h-fit top-full -mt-1 left-0 bg-[#181818] p-[16px] rounded-b card-shaded-bottom transition-opacity ${isDelayedHovered ? 'opacity-1' : 'opacity-0 pointer-events-none'}`}>
                 <div className="flex gap-x-[6px]">

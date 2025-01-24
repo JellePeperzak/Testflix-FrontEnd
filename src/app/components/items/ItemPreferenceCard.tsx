@@ -39,8 +39,8 @@ const ItemPreferenceCard: React.FC<PreferenceItemProps> = ({ imdb_id, title, ima
                 }
             }}
         >
-            <Image
-                src={`https://thesis.streamwebsite.nl/thumbnails/${imdb_id}.${image_type}`}
+            <img
+                src={`https://thesis.streamwebsite.nl/thumbnails/webp/${imdb_id}.webp`}
                 width={1920}
                 height={1080}
                 alt={`${title}`}
