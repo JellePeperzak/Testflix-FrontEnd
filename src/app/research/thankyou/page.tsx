@@ -67,7 +67,7 @@ export default function ThankyouPage() {
         <LayoutResearch title="Thank you!">
             <div className="flex flex-col gap-5">
                 <p className="text-center mx-[5em]">
-                    And that's it! Thank you so much for participating in my study. In the sections below you can read more 
+                    And that's it! <span className="font-bold">Thank you so much</span> for participating in my study. In the sections below you can read more 
                     about the specific details of my study and you'll have the opportunity to leave feedback or comment on 
                     any issues that you ran into during the experiment. If you have no feedback or comments, you are free to 
                     leave this page by closing the brower tab or window. If you do have feedback or comments, make sure to 
@@ -77,7 +77,13 @@ export default function ThankyouPage() {
                 <div className="section-text-research">
                     <h2>What is my study about, exactly?</h2>
                     <p>
-                        text about what my study is about.
+                    As mentioned in the introduction, our study aims to improve the understanding of the relationship between user experience and 
+                    the quality of service in the context of video streaming services. More specifically, our study explores how the 
+                    quality of recommendations, as perceived by the user, affects different factors that contribute towards their user experience. 
+                    The reason why you were asked to perform three tasks is because there were three different recommender algorithms that each 
+                    generated recommendations in a drastically different way. Through your responses to the statements we measured not only how 
+                    satisfied you were with the recommendations for each task, but also to what degree different factors of your user experience 
+                    were satisfied. 
                     </p>
                 </div>
 

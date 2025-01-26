@@ -10,6 +10,8 @@ import { useCurrentAlgorithmContext } from "@/app/context/CurrentAlgorithmContex
 import { useTaskContext } from "@/app/context/TaskContext"
 import { useBackendDataContext } from "@/app/context/BackendDataContext"
 
+import LayoutResearch from "../layout/LayoutResearch"
+
 import { useRouter } from "next/navigation"
 
 export default function LoadingPage() {
@@ -27,7 +29,7 @@ export default function LoadingPage() {
     if (pageType !== "Research") {
       setPageType("Research")
     }
-  }, [pageType])
+  }, [pageType, setPageType])
 
   useEffect(() => {
     const createDataContext = async () => {
@@ -96,9 +98,14 @@ export default function LoadingPage() {
 
     createDataContext()
 
-  }, [router]);
+  }, [router, dataToStore, preferenceIDs, setAlgorithmOrder, setCarouselObjects1, setCarouselObjects2, setCarouselObjects3, 
+    setCurrentAlgorithmIndex, setCurrentTaskIndex, setDataToStore, setItemObjectList1, setItemObjectList2, setItemObjectList3,
+    setParticipantNumber, setTaskOrder]);
 
   return (
-        <p>Please wait a minute while your Testflix is being generated..</p>
+    <LayoutResearch title="Loading data..">
+      <p>Please wait a minute while your Testflix is being generated..</p>
+    </LayoutResearch>
+        
   )
 }

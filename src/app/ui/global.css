@@ -47,11 +47,19 @@ input[type="radio"] {
   body, html {
       font-size: 1.5vw;
   }
+
+  .layout-research {
+    font-size: 2vw;
+  }
 }
 
 @media screen and (min-width: 481px) and (max-width: 840px) and (max-aspect-ratio: 4 / 3) {
   body, html {
       font-size: 1vw;
+  }
+
+  .layout-research {
+    font-size: 1.8vw;
   }
 }
 
@@ -59,12 +67,32 @@ input[type="radio"] {
   body, html {
       font-size: .75vw;
   }
+
+  .layout-research {
+    font-size: 1.2vw;
+  }
 }
+
+@media screen and (min-width: 1281px) and (max-width: 1600px) and (max-aspect-ratio: 4 / 3) {
+  body, html {
+      font-size: .75vw;
+  }
+
+  .layout-research {
+    font-size: 1.2vw;
+  }
+}
+
 
 @media screen and (min-width: 1601px) and (max-width:1920px) and (max-aspect-ratio:4/3) {
   body,html {
       font-size:.75vw
   }
+
+  .layout-research {
+    font-size: 1.2vw;
+  }
+  
 }
 
 @media screen and (min-width: 1921px) and (max-aspect-ratio:4/3) {
@@ -73,16 +101,16 @@ input[type="radio"] {
   }
 }
 
-@media screen and (min-width: 1281px) and (max-width: 1600px) and (max-aspect-ratio: 4 / 3) {
-  body, html {
-      font-size: .75vw;
-  }
-}
+
 
       /*ORIENTATION == LANDSCAPE*/
 @media screen and (max-width: 480px) and (orientation: landscape) {
   body, html {
       font-size: 1.5vw;
+  }
+
+  .layout-research {
+    font-size: 2vw;
   }
 }
 
@@ -90,11 +118,19 @@ input[type="radio"] {
   body, html {
       font-size: 1.2vw;
   }
+
+  .layout-research {
+    font-size: 1.8vw;
+  }
 }
 
 @media screen and (min-width: 841px) and (max-width: 1280px) and (orientation: landscape) {
   body, html {
       font-size: .85vw;
+  }
+
+  .layout-research {
+    font-size: 1.3vw;
   }
 }
 
@@ -102,11 +138,19 @@ input[type="radio"] {
   body, html {
       font-size: .75vw;
   }
+
+  .layout-research {
+    font-size: 1.1vw;
+  }
 }
 
 @media screen and (min-width: 1601px) and (max-width: 1920px) and (orientation: landscape) {
   body, html {
       font-size: .75vw;
+  }
+
+  .layout-research {
+    font-size: 0.9vw;
   }
 }
 
@@ -267,7 +311,7 @@ body {
 }
 
 .section-text-research h2 {
-  color: #E50914;
+  color: #ff0a16;
   font-size: 130%;
   font-weight: 700;
   padding-left: 1rem;
