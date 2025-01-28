@@ -218,21 +218,44 @@ export default function QuestionnaireDemographic() {
                     </div>
                     <div className="flex flex-col w-fit items-center">
                         <p>How many hours do you spend using video streaming services on average per week?</p>
-                        <div className="flex flex-col w-full items-start">
-                            <div className="layout-radio-horizontal">
-                                <input type="radio" name="consumption" id="<3" value="<3>" onChange={handleInputChange} /><label htmlFor="<3">Less than 3 hours</label>
+                        <div className="flex w-full justify-between items-center mt-[1em]">
+                            <div className="flex flex-col">
+                                <div className="layout-radio-horizontal">
+                                    <input type="radio" name="consumption" id="<3" value="<3>" onChange={handleInputChange} /><label htmlFor="<3">Less than 3 hours per week</label>
+                                </div>
+                                <div className="layout-radio-horizontal">
+                                    <input type="radio" name="consumption" id="3-6" value="3-6" onChange={handleInputChange} /><label htmlFor="3-6">Between 3 and 6 hours per week</label>
+                                </div>
+                                <div className="layout-radio-horizontal">
+                                    <input type="radio" name="consumption" id="6-9" value="6-9" onChange={handleInputChange} /><label htmlFor="6-9">Between 6 and 9 hours per week</label>
+                                </div>
+                                <div className="layout-radio-horizontal">
+                                    <input type="radio" name="consumption" id="9-12" value="9-12" onChange={handleInputChange} /><label htmlFor="9-12">Between 9 and 12 hours per week</label>
+                                </div>
+                                <div className="layout-radio-horizontal">
+                                    <input type="radio" name="consumption" id=">12" value=">12" onChange={handleInputChange} /><label htmlFor=">12">More than 12 hours per week</label>
+                                </div>
                             </div>
-                            <div className="layout-radio-horizontal">
-                                <input type="radio" name="consumption" id="3-6" value="3-6" onChange={handleInputChange} /><label htmlFor="3-6">Between 3 and 6 hours</label>
-                            </div>
-                            <div className="layout-radio-horizontal">
-                                <input type="radio" name="consumption" id="6-9" value="6-9" onChange={handleInputChange} /><label htmlFor="6-9">Between 6 and 9 hours</label>
-                            </div>
-                            <div className="layout-radio-horizontal">
-                                <input type="radio" name="consumption" id="9-12" value="9-12" onChange={handleInputChange} /><label htmlFor="9-12">Between 9 and 12 hours</label>
-                            </div>
-                            <div className="layout-radio-horizontal">
-                                <input type="radio" name="consumption" id=">12" value=">12" onChange={handleInputChange} /><label htmlFor=">12">More than 12 hours</label>
+                            <div className="grid grid-rows-6 w-fit border-2 rounded-t-lg">
+                                <div className="border-b">
+                                    <p className="text-center">Estimated amounts</p>
+                                </div>
+                                <div className="grid grid-cols-3 border-b border-dashed">
+                                    <div className="px-[0.5em]">
+                                        <p className="text-center">Hours</p>
+                                    </div>
+                                    <div className="px-[0.5em]">
+                                        <p className="text-center">Movies</p>
+                                    </div>
+                                    <div className="px-[0.5em]">
+                                        <p className="text-center">Episodes</p>
+                                    </div>
+                                </div>
+                                
+                                <EstimationRow hours='3' movies='2' episodes='6' lastRow={false}/>
+                                <EstimationRow hours='6' movies='4' episodes='12' lastRow={false}/>
+                                <EstimationRow hours='9' movies='6' episodes='18' lastRow={false}/>
+                                <EstimationRow hours='12' movies='8' episodes='24' lastRow={true}/>
                             </div>
                         </div>
                         {errorObject.location === 'consumption' && <p className="text-red-500">{errorObject.message}</p>}
@@ -249,3 +272,40 @@ export default function QuestionnaireDemographic() {
         </LayoutResearch>
     );
 };
+
+interface estimationRowProps {
+    hours: number | string;
+    movies: number | string;
+    episodes: number | string;
+    lastRow: boolean;
+}
+
+
+function EstimationRow({hours, movies, episodes, lastRow}: estimationRowProps) {
+
+    return (
+        <div className={`grid grid-cols-3 ${!lastRow && "border-b border-dotted border-[#5d5d5d]"}`}>
+            <div className="px-[0.5em]">
+                <p className="text-center">{hours}</p>
+            </div>
+            <div className="px-[0.5em]">
+                <p className="text-center">{movies}</p>
+            </div>
+            <div className="px-[0.5em]">
+                <p className="text-center">{episodes}</p>
+            </div>
+        </div>
+    )
+}
+
+<div className="flex justify-around border-b border-dashed">
+                                    <div className="px-[0.5em]">
+                                        <p className="text-center">Hours</p>
+                                    </div>
+                                    <div className="px-[0.5em]">
+                                        <p className="text-center">Movies</p>
+                                    </div>
+                                    <div className="px-[0.5em]">
+                                        <p className="text-center">Episodes</p>
+                                    </div>
+                                </div>

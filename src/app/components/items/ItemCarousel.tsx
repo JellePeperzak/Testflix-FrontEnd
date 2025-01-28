@@ -130,7 +130,6 @@ const Carousel: React.FC<CarouselProps> = ({ item_type, genre, items }) => {
                                             runtime={item["runtime"]} 
                                             actors={item["actors"]} 
                                             pg_rating={item["pg_rating"]}
-                                            image_type={item['image_type']}
                                             season_count={item["season_count"]} 
                                             originTransform={index === currentIndex ? 'left' : index === (currentIndex + (jumpDistance-1)) ? 'right' : null}
                                         />

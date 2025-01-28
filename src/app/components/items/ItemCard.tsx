@@ -9,35 +9,42 @@ import { useRouter } from 'next/navigation';
 import { useTaskContext } from '@/app/context/TaskContext';
 import { useBackendDataContext } from '@/app/context/BackendDataContext';
 
+
 export interface ItemProps {
-    imdb_id: string
-    tvdb_id?: string
-    item_type: string
-    title: string
-    year?: string
-    genres: string
-    runtime: string
-    actors?: string
-    pg_rating: string
-    image_type: string
-    season_count: string
-    score?: number
+    imdb_id: string;
+    title: string;
+    tvdb_id?: string | number;
+    item_type: string;
+    year?: string | number;
+    genres: string;
+    runtime: string | number;
+    actors?: string;
+    pg_rating: string;
+    season_count: string;
+    score?: number;
 };
 
-const Item: React.FC<ItemProps & { originTransform?: string | null}> = ({ imdb_id, image_type, item_type, title, pg_rating, genres, runtime, season_count, originTransform=null}) => {
+const Item: React.FC<ItemProps & { originTransform?: string | null}> = ({ imdb_id, item_type, title, pg_rating, genres, runtime, season_count, originTransform=null}) => {
     const [isDelayedHovered, setIsDelayedHovered] = useState(false);
     const [runtimeFormatted, setRuntimeFormatted] = useState(`${runtime}m`)
     const timeoutId = useRef<NodeJS.Timeout | null>(null);
     const pgIconPath = `/icons/pg-icons/PG${pg_rating}.png`;
     
-    const {taskOrder, currentTaskIndex} = useTaskContext();
+    const {taskOrder, currentTaskIndex, practiceTask, setPracticeTask, setPracticeError} = useTaskContext();
     const {dataToStore, setDataToStore} = useBackendDataContext();
     const { setPageType } = usePageContext();
 
     const router = useRouter();
 
     useEffect(() => {
-        const runtimeNumber = parseInt(runtime, 10)
+        let runtimeNumber;
+
+        if (typeof runtime === "string") {
+            runtimeNumber = parseInt(runtime, 10); // Parse only if runtime is a string
+        } else {
+            runtimeNumber = runtime; // Use it directly if it's already a number
+        }
+
         if (runtimeNumber >= 60) {
             const hours = Math.floor(runtimeNumber / 60);
             const minutes = runtimeNumber % 60;
@@ -60,35 +67,49 @@ const Item: React.FC<ItemProps & { originTransform?: string | null}> = ({ imdb_i
 
     const handleChoiceSubmit = () => {
         // FUNCTION THAT TRIGGERS WHEN THE USER CONFIRMS THEIR SELECTION OF AN ITEM
-        const currentTime = Date.now()
-        switch (taskOrder[currentTaskIndex]) {
-            case 1:
+        //      First check if the user is on the practice task. If so, validate the selected item by checking its imdb_id.
+        if (practiceTask) {
+            setPracticeError(false);
+            if (imdb_id !== 'tt2015381') {
+                setPracticeError("Please perform the task correctly. Hover over 'Task' in the top-right corner if you need a reminder of the task.")
+            } else {
                 setPageType("Research")
-                setDataToStore({
-                    ...dataToStore,
-                    task1_finish: currentTime
-                })
-                router.push('/research/questions')
-                break;
-            case 2: 
-                setPageType("Research")
-                setDataToStore({
-                    ...dataToStore,
-                    task2_finish: currentTime
-                })
-                router.push('/research/questions')
-                break;
-            case 3:
-                setPageType("Research") 
-                setDataToStore({
-                    ...dataToStore,
-                    task3_finish: currentTime
-                })
-                router.push('/research/questions')
-                break;
-            default:
-                throw new Error(`Current task number could not be identified and stored in the dataToStore context`)
+                setPracticeTask(false)
+                router.push('/research/task')
+            }
+        } else {
+            const currentTime = Date.now()
+            switch (taskOrder[currentTaskIndex]) {
+                case 1:
+                    setPageType("Research")
+                    setDataToStore({
+                        ...dataToStore,
+                        task1_finish: currentTime
+                    })
+                    router.push('/research/questions')
+                    break;
+                case 2: 
+                    setPageType("Research")
+                    setDataToStore({
+                        ...dataToStore,
+                        task2_finish: currentTime
+                    })
+                    router.push('/research/questions')
+                    break;
+                case 3:
+                    setPageType("Research") 
+                    setDataToStore({
+                        ...dataToStore,
+                        task3_finish: currentTime
+                    })
+                    router.push('/research/questions')
+                    break;
+                default:
+                    throw new Error(`Current task number could not be identified and stored in the dataToStore context`)
+            }
         }
+
+        
     }
     
     return (
@@ -113,12 +134,6 @@ const Item: React.FC<ItemProps & { originTransform?: string | null}> = ({ imdb_i
                         onClick={handleChoiceSubmit}
                     >
                         <i className="fas fa-play icon-size-variable ml-[0.1em] scale-x-110"></i>
-                    </button>
-                    <button className="button-size-variable bg-[#232323] text-[#181818] border-[0.13em] border-[#757575] rounded-full flex items-center justify-center">
-                        <i className="fas fa-plus text-white icon-size-variable-small"></i>
-                    </button>
-                    <button className="button-size-variable bg-[#232323] text-[#181818] border-[0.13em] border-[#757575]  rounded-full flex items-center justify-center">
-                        <i className="fas fa-thumbs-up text-white icon-size-variable-small scale-90"></i>
                     </button>
                 </div>
                 <div className="flex py-[10px] ml-[6px]">

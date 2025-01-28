@@ -2,6 +2,8 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
+import '@fortawesome/fontawesome-free/css/all.css';
+
 import { useTaskContext } from "@/app/context/TaskContext"
 import { useBackendDataContext } from "@/app/context/BackendDataContext"
 import { usePageContext } from "@/app/context/PageTypeContext";
@@ -9,7 +11,7 @@ import { usePageContext } from "@/app/context/PageTypeContext";
 import LayoutResearch from "../layout/LayoutResearch";
 
 export default function TaskPage() {
-    const {taskOrder, currentTaskIndex, taskDescriptions} = useTaskContext();
+    const {taskOrder, currentTaskIndex, taskDescriptions, practiceTask, setPracticeTask} = useTaskContext();
     const {dataToStore, setDataToStore} = useBackendDataContext();
     const {pageType, setPageType} = usePageContext();
 
@@ -19,7 +21,11 @@ export default function TaskPage() {
         if (pageType !== "Research") {
             setPageType("Research")
         }
-    }, [pageType, setPageType]);
+
+        if (practiceTask === true) {
+            setPracticeTask(false)
+        }
+    }, [pageType, practiceTask, setPageType, setPracticeTask]);
 
     const handleButtonClick = () => {
         const currentTime = Date.now()
@@ -56,10 +62,15 @@ export default function TaskPage() {
     return (
         <LayoutResearch title="This Is Your Task">
             <div className="flex flex-col w-full items-center px-[15rem]">
-                <p>Please read the task below. When you're ready to start the task, click on the "Start Task" button</p>
-                <div className="border-y-[1px] pb-[1em] my-[3em]">
+                <div className="border-y-[1px] pb-[1em] mt-[3em]">
                     <p className="text-center font-bold text-[1.4rem] pb-[0.5em] pt-[0.5em]">Task {currentTaskIndex + 1} ({currentTaskIndex + 1}/3)</p>
                     <p className="mx-[2em] font-bold text-[1.2rem]">{taskDescriptions[taskOrder[currentTaskIndex]]}</p>
+                </div>
+                <div className="w-fit my-[1em]">
+                    <p> To select a series or a movie, click on the play button <button 
+                        className="button-size-variable inline-flex bg-[#ededed] text-[#000000] rounded-full flex items-center justify-center self-center cursor-default"
+                    ><i className="fas fa-play icon-size-variable ml-[0.1em] scale-x-110" /></button>, which you will see upon hovering over the picture.
+                    </p>
                 </div>
                 <button 
                     className="w-fit self-center bg-black text-[#E50914] text-[125%] font-bold px-[1em] py-[0.5em] mt-[1em] rounded-lg"

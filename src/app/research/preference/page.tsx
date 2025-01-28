@@ -25,21 +25,19 @@ export default function PreferencePage() {
         }
     }, [pageType, setPageType]);
 
-    // itemData should be a list of format [imdb_id, title, image_type]
+    // itemData should be a list of format [imdb_id, title]
     const handleItemClick = (itemData: string[]) => {
         setErrorMessage(null)
         const isSelected = selectedItems.some(
             (item) =>
                 item[0] === itemData[0] &&
-                item[1] === itemData[1] &&
-                item[2] === itemData[2]
+                item[1] === itemData[1] 
         );
         if (isSelected){
             const newItems = selectedItems.filter(
                 (item) =>
                     item[0] !== itemData[0] ||
-                    item[1] !== itemData[1] ||
-                    item[2] !== itemData[2]
+                    item[1] !== itemData[1] 
             );
             setSelectedItems(newItems)
         } else if (selectedItems.length === 5){
@@ -51,8 +49,8 @@ export default function PreferencePage() {
 
     const handlePreferenceConfirmation = () => {
         setErrorMessage(null)
-        if (selectedItems.length < 3) {
-            setErrorMessage("Please select at least three programmes before trying to continue.")
+        if (selectedItems.length < 5) {
+            setErrorMessage("Please select five programmes before trying to continue.")
         } else {
             const preference_ids = selectedItems.map((itemData) => itemData[0])
             setPreferenceIDs(preference_ids)
@@ -64,7 +62,7 @@ export default function PreferencePage() {
         <div className="layout-research">
             <div className="fixed bg-[#141414] bg-gradient-header-menu w-full h-fit pb-[1em] z-10">
                 <h1 className="text-[#E50914] font-bold">Give your Preference</h1>
-                <p className="text-center">Below you see a selection of 36 programmes. Please select the 3 to 5 programmes that you like best from this selection.</p>
+                <p className="text-center">Below you see a selection of 36 programmes. Please select the 5 programmes that best align with your taste.</p>
                 {errorMessage && <p className="text-red-500 text-center mt-[1em]">{errorMessage}</p>}
             </div>
             
@@ -82,7 +80,6 @@ export default function PreferencePage() {
                                 key={`${itemData[0]}${index}`} 
                                 imdb_id={itemData[0]} 
                                 title={itemData[1]} 
-                                image_type={itemData[2]}
                                 selectedItems={selectedItems}
                                 handleItemClick={handleItemClick}
                             />
@@ -117,7 +114,6 @@ function PreferenceGrid({ selectedItems, handleItemClick }: PreferenceGridProps)
                         key={`${item['tvdb_id']}${index}`} 
                         imdb_id={item['imdb_id']} 
                         title={item['title']} 
-                        image_type={item['image_type']}
                         selectedItems={selectedItems}
                         handleItemClick={handleItemClick}
                     />

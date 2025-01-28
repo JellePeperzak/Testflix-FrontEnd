@@ -54,8 +54,8 @@ export default function Home () {
             In order to participate in this study, you need the following things:
           </p>
           <ul>
-            <li>A laptop or desktop to perform the tasks with {"("}i.e. NO phones or tablets{")"}</li>
-            <li>Enough time to complete the full study in one go {"("}See <i>"What can I expect while participating in the study?" </i> for estimated duration of participation{")"}</li>
+            <li>A laptop or desktop {"("}i.e. NO phones or tablets{")"}</li>
+            <li>Enough time to complete the full study in one go {"("}Roughly 10-15 minutes{")"}</li>
           </ul>
           
         </div>
@@ -74,8 +74,8 @@ export default function Home () {
         <div className="section-text-research">
           <h2>What can I expect while participating in the study?</h2>
           <p>
-            During the study you will perform three tasks while navigating a web page that resembles a video streaming service. 
-            After each task you will be asked to respond to a list of statements. Participation will take about <span className="text-pink-500">XX</span> minutes. 
+            You will perform three tasks while navigating a web page showing a video streaming service. 
+            After each task you will be asked to respond to a list of statements.
           </p>
         </div>
 
@@ -85,15 +85,10 @@ export default function Home () {
             If you consent to participating in the study, the data you provide will be analysed and stored anonymously in a secure database. 
             This anonymous data may be made available after the completion of the study to researchers and other research users upon request via a 
             secured data repository. 
-          </p>
-        </div>
-
-        <div className="section-text-research">
-          <h2>What happens if I decide to stop my participation during the study?</h2>
-          <p>
+            <br />
             Participation is voluntary. I am only allowed to collect your data for my study if you consent to this. 
             If you decide not to participate, you do not have to take any further action. 
-            If you do decide to participate, you can always change your mind and stop participating at any time, including during the study. 
+            If you do decide to participate, you can still change your mind and stop participating during the study. 
             If you decide to stop participating during the study, the data collected up to the point of dropping out will be deleted.
           </p>
         </div>

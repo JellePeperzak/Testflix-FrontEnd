@@ -2,13 +2,14 @@
 
 import { useEffect, useState, useRef, useMemo, useCallback, Suspense } from "react"
 import { usePageContext } from "@/app/context/PageTypeContext"
-import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useCurrentAlgorithmContext } from "@/app/context/CurrentAlgorithmContext";
 import { useAlgorithm1Context } from '@/app/context/Algorithm1Context';
 import { useAlgorithm2Context } from '@/app/context/Algorithm2Context';
 import { useAlgorithm3Context } from '@/app/context/Algorithm3Context';
 import { useBackendDataContext } from "@/app/context/BackendDataContext"
 import { useTaskContext } from "@/app/context/TaskContext"
+import { useSearchQueryContext } from "@/app/context/SearchQueryContext";
 import useResponsiveJumpDistance from "@/app/hooks/useResponsiveJumpDistance";
 
 import Item, { ItemProps } from "@/app/components/items/ItemCard";
@@ -23,7 +24,17 @@ export default function TestFlixSearchPage() {
   const {dataToStore, setDataToStore} = useBackendDataContext();
   const {taskOrder, currentTaskIndex} = useTaskContext();
   const {algorithmOrder, currentAlgorithmIndex} = useCurrentAlgorithmContext();
+
+  const {searchQuery} = useSearchQueryContext();
+
+  const router = useRouter();
   
+  useEffect(() => {
+    // Check on first render if there is a search query. If not, return to the testflix home-page
+    if (!searchQuery) {
+      router.push('/testflix')
+    }
+  }, [])
   
   useEffect(() => {
     if (pageType != "Search") {
@@ -76,8 +87,7 @@ function SearchPageContent() {
   const { itemObjectList2 } = useAlgorithm2Context()
   const { itemObjectList3 } = useAlgorithm3Context()
 
-  const searchParams = useSearchParams();
-  const searchQuery = searchParams.get('q');
+  const {searchQuery} = useSearchQueryContext();
 
   useEffect(() => {
     if (!algorithmInitialized) {
@@ -142,6 +152,8 @@ function SearchGrid({ filteredData, searchQuery }: SearchGridProps) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);  // Track the hovered item index
   const jumpDistance: number = useResponsiveJumpDistance();
 
+  const {initialUrl} = useSearchQueryContext();
+
   const zIndexState: number[] = useMemo(() => {
     return filteredData.map((_, index) => (index === hoveredIndex ? 50 : 0)); // Only set z-index to 30 when hovered
   }, [hoveredIndex, filteredData]); // Recompute when hoveredIndex changes
@@ -192,6 +204,8 @@ function SearchGrid({ filteredData, searchQuery }: SearchGridProps) {
           <div className="box-border p-0">
               <div className="mt-[1em] mx-0 mb-0 pt-[4%] min-h-[65px] pb-[0%]">
                       {/*START GRID ELEMENT*/}
+                      <p className="text-center">searchQuery length: {searchQuery ? searchQuery.length : 'null'}</p>
+                      <p className="text-center">initialUrl: {initialUrl ? initialUrl : 'null'}</p>
                       <h1 className='text-5xl px-[4%] tracking-tighter font-[500] font-["Verdana"]'>{`Search Results${searchQuery && ` For "${searchQuery}"`}`}</h1>
                       <div className="grid gap-y-[4vw] gap-x-0 mt-[10px] mx-[4%] mb-[10px] leading-[1.6] grid-search-media-dependend">
                           {filteredData.map((item, index) => (
@@ -211,7 +225,6 @@ function SearchGrid({ filteredData, searchQuery }: SearchGridProps) {
                                     title={item["title"]} year={item["year"]} 
                                     genres={item["genres"]} runtime={item["runtime"]} 
                                     actors={item["actors"]} pg_rating={item["pg_rating"]} 
-                                    image_type={item['image_type']}
                                     season_count={item["season_count"]} 
                                     originTransform={(index === 0 || index % jumpDistance === 0) ? 'left' : (index === jumpDistance-1 || index % jumpDistance === jumpDistance-1) ? 'right' : null}
                                   />

@@ -9,14 +9,11 @@ import { useBackendDataContext } from '@/app/context/BackendDataContext';
 
 import { DataToStoreProps } from "@/app/components/interfaces/backendDataObject";
 
-interface statementsProps {
-    [key: number]: string;
-}
 
-interface statementObject {
-    statements: statementsProps;
-    statementType: 'grat' | 'eval';
-    statementSubType: 'Service' | 'Interface' | 'Programmes' | 'Social';
+interface statementProps {
+    statement: string;
+    statementType: string;
+    statementNumber: number;
 }
 
 export default function QuestionnaireExperience() {
@@ -30,56 +27,15 @@ export default function QuestionnaireExperience() {
 
     const router = useRouter();
 
-    const cnStatements: statementObject = {
-        statements: {
-            1: "I was able to navigate and filter contents",
-            2: "The interface allowed me to watch a wide variety of programmes.",
-            3: "The interface allowed me to browse freely.",
-            4: "I feel that the interface displayed personalized content to me.",
-            5: "I feel that the service was personalized for my usage.",
-            6: "The interface allowed me to search for videos that I’m interested in",
-            7: "The content offered by the interface was personalised", 
-        },
-        statementType: 'grat',
-        statementSubType: 'Interface'
-    };
-
-    const enStatements: statementObject = {
-        statements: {
-            8: "Exciting",
-            9: "Boring",
-            10: "Amusing",
-            11: "Engaging",
-        },
-        statementType: 'grat',
-        statementSubType: 'Programmes'
-    }
-
-    const seStatements: statementObject = {
-        statements: {
-            12: "This streaming service would allow me to connect with others",
-            13: "This streaming service could allow me to expand my social network"
-        },
-        statementType: 'grat',
-        statementSubType: 'Social'
-    }
-
-    const evalStatements: statementObject = {
-        statements: {
-            1: "The interface gave me some really good recommendations",
-            2: "I found the interface easy to use",
-            3: "The interface was competent to help me effectively find movies and series I really like",
-            4: "I found my visit to the interface enjoyable",
-            5: "I am confident that the item I just selected is really the best choice for me",
-            6: "I easily found the information I was looking for",
-            7: "Looking for a product using this interface required too much effort",
-            8: "I trust the recommended items since they were consistent with my preferences",
-            9: "My overall satisfaction with the interface is high",
-            10: "I would watch the item I just chose if given the opportunity"
-        },
-        statementType: 'eval',
-        statementSubType: 'Service'
-    };
+    const statements: statementProps[] = [
+        {statement: "I would watch the programme I chose if given the opportunity.", statementType:"eval", statementNumber: 1},
+        {statement: "I was able to find a wide variety of programmes I could consider watching in addition to the one I chose.", statementType:"cn", statementNumber: 1},
+        {statement: "I was able to navigate the displayed programmes easily.", statementType:"cn", statementNumber: 2},
+        {statement: "I was able to look for programmes I like without too much effort.", statementType:"eval", statementNumber: 2},
+        {statement: "The displayed programmes were personalized based on the initial preferences I submitted.", statementType:"eval", statementNumber: 3},
+        {statement: "The displayed programmes were interesting enough to find more information about them.", statementType:"en", statementNumber: 1},
+        {statement: "The displayed programmes were interesting enough to discuss them with other people.", statementType:"se", statementNumber: 1},
+    ];
 
     useEffect(() => {
         if (pageType !== "Research") {
@@ -98,7 +54,7 @@ export default function QuestionnaireExperience() {
         e.preventDefault();
 
         // IF THE AMOUNT OF STATEMENTS CHANGES, THE NUMBER SHOULD CHANGE AS WELL
-        const allAnswered = Object.keys(responses).length === 23;
+        const allAnswered = Object.keys(responses).length === 7;
 
         if (allAnswered) {
             setResponseCheck(true)
@@ -185,14 +141,11 @@ export default function QuestionnaireExperience() {
         <div className="layout-research">
             <div className="fixed bg-[#141414] bg-gradient-header-menu w-full h-fit pb-[1em] z-10">
                 <h1 className="text-[#E50914] font-bold">What do you think?</h1>
-                <p className="text-center">Below you will find 23 statements. Please respond to them based on the task you have just performed.</p>
+                <p className="text-center">Below you will find 7 statements. Please respond to them based on the task you have just performed.</p>
                 {!responseCheck && <p className="text-red-500 text-center">Please respond to all statements before continuing</p>}
             </div>
             <form className="flex flex-col mt-[10rem]" onSubmit={handleFormSubmit}>
-                <QuestionList statementObject={cnStatements} handleResponseChange={handleResponseChange} />
-                <QuestionList statementObject={enStatements} handleResponseChange={handleResponseChange} />
-                <QuestionList statementObject={seStatements} handleResponseChange={handleResponseChange} />
-                <QuestionList statementObject={evalStatements} handleResponseChange={handleResponseChange} />
+                <QuestionList statementList={statements} handleResponseChange={handleResponseChange} />
                 <button
                     type="submit"
                     className="w-fit self-center bg-black text-[#E50914] text-[125%] font-bold px-[1em] py-[0.5em] mt-[1em] mb-[2em] rounded-lg"
@@ -208,46 +161,39 @@ export default function QuestionnaireExperience() {
 
 
 interface QuestionListProps {
-    statementObject: statementObject; // This should be an array of statementObjects
+    statementList: statementProps[]; // This should be an array of statementObjects
 }
 
-function QuestionList({ statementObject, handleResponseChange }: QuestionListProps & { handleResponseChange: (name: string, value: number) => void }) {
+function QuestionList({ statementList, handleResponseChange }: QuestionListProps & { handleResponseChange: (name: string, value: number) => void }) {
     const {currentAlgorithmIndex, algorithmOrder} = useCurrentAlgorithmContext();
 
     return (
-        <div className="grid border-b-2 my-[2rem] mx-[30rem]">
+        <div className="grid my-[2rem]">
             {/* CATEGORY TITLE + description */}
-            <div className="grid grid-cols-3 w-full">
+            {/*<div className="grid grid-cols-3 w-full">
                 <div className="border-b-2" />
                 <p className="text-[1.5em] font-bold text-center border-x-2 border-t-2 rounded-t pt-[0.2em]">{statementObject.statementSubType}</p>
                 <div className="border-b-2" />
-            </div>
-
-            {statementObject.statementSubType === 'Programmes' && (
-                <div className='w-full border-x-2 pt-[1em]'>
-                    <p className="text-center">For every word below, declare how well you think they finish the following statement:</p>
-                    <p className="text-center italic">"The programmes I encountered seemed ..."</p>
-                </div>
-            )}
+            </div>*/}
 
             {/* STATEMENTS */}
-            <div className="grid grid-cols-[fit-content(100%)_1fr] auto-rows-[minmax(0,_1fr)] gap-5 pt-[1.5em] pb-[1em] px-[1em] border-x-2">
+            <div className="grid grid-cols-[fit-content(66%)_1fr] auto-rows-[minmax(0,_1fr)] gap-5 pt-[1.5em] pb-[1em] px-[1em] border-2 mx-[15rem]">
                 <div />
-                <div className="flex w-full justify-between">
-                    <div><p>Strongly disagree</p></div>
-                    <div><p>Strongly agree</p></div>
+                <div className="flex justify-between">
+                    <div className="inline-flex"><p>Strongly disagree</p></div>
+                    <div className="inline-flex ml-auto"><p>Strongly agree</p></div>
                 </div>
 
                 {/* GRATIFICATION STATEMENT ROWS */}
-                {statementObject && Object.keys(statementObject.statements).map((statementNumber) => (
-                    <Fragment key={`div-${statementObject.statementType}${statementNumber}`}>
+                {statementList.map((statementObject) => (
+                    <Fragment key={`div-${statementObject.statementType}${statementObject.statementNumber}`}>
                         <div 
                             className="flex items-center min-w-[20em]"    
                         >
-                            <p className="text-center">{statementObject.statements[parseInt(statementNumber)]}</p>
+                            <p>{statementObject.statement}</p>
                         </div>
                         <LikertInput 
-                            inputName={`${statementObject.statementType}_${statementNumber}_${algorithmOrder[currentAlgorithmIndex]}`} 
+                            inputName={`${statementObject.statementType}_${statementObject.statementNumber}_${algorithmOrder[currentAlgorithmIndex]}`} 
                             size={5} 
                             handleResponseChange={handleResponseChange}
                         />

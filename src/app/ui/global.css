@@ -311,7 +311,8 @@ body {
 }
 
 .section-text-research h2 {
-  color: #ff0a16;
+  color: #ffffff;
+  /*#ff0a16*/
   font-size: 130%;
   font-weight: 700;
   padding-left: 1rem;

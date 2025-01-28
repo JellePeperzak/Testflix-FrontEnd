@@ -7,6 +7,7 @@ import { Algorithm2Provider } from "../context/Algorithm2Context";
 import { Algorithm3Provider } from "../context/Algorithm3Context";
 import { PageProvider } from "../context/PageTypeContext";
 import { BackendDataProvider } from "../context/BackendDataContext";
+import { SearchQueryProvider } from "../context/SearchQueryContext";
 import Layout from "../components/Layout"; // Adjust path as needed
 
 export default function ContextLayout({ children }: { children: React.ReactNode }) {
@@ -18,9 +19,11 @@ export default function ContextLayout({ children }: { children: React.ReactNode 
             <Algorithm3Provider>
               <CurrentAlgorithmProvider>
                 <TaskProvider>
-                  <Layout>
-                    {children}
-                  </Layout>
+                  <SearchQueryProvider>
+                    <Layout>
+                      {children}
+                    </Layout>
+                  </SearchQueryProvider>
                 </TaskProvider>
               </CurrentAlgorithmProvider>
             </Algorithm3Provider>

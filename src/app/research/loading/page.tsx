@@ -86,7 +86,7 @@ export default function LoadingPage() {
             };
             setDataToStore(newDataToStore)
             
-            router.push('/research/task') // Redirect to the next page after successful fetch
+            router.push('/research/practice') // Redirect to the next page after successful fetch
         } else {
             console.error("File generation failed:", data.error || "Unknown error")
         }
@@ -104,7 +104,7 @@ export default function LoadingPage() {
 
   return (
     <LayoutResearch title="Loading data..">
-      <p>Please wait a minute while your Testflix is being generated..</p>
+      <p className="text-center">Please wait a minute while your Testflix is being generated..</p>
     </LayoutResearch>
         
   )

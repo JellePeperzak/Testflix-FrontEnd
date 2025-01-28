@@ -1,19 +1,17 @@
 'use client'
 
 import { useState, useEffect } from "react";
-import Image from "next/image";
 import '@fortawesome/fontawesome-free/css/all.css';
 
 export interface PreferenceItemProps {
     imdb_id: string;
     title: string;
-    image_type: string;
     handleItemClick: (itemData: string[]) => void;
     selectedItems: string[][];
     [key: string]: any;
 }
 
-const ItemPreferenceCard: React.FC<PreferenceItemProps> = ({ imdb_id, title, image_type, handleItemClick, selectedItems }) => {
+const ItemPreferenceCard: React.FC<PreferenceItemProps> = ({ imdb_id, title, handleItemClick, selectedItems }) => {
     const [itemIsHovered, setItemIsHovered] = useState<boolean>(false);
     const [iconIsHovered, setIconIsHovered] = useState<boolean>(false);
     const [selected, setSelected] = useState<boolean>(false);
@@ -22,11 +20,10 @@ const ItemPreferenceCard: React.FC<PreferenceItemProps> = ({ imdb_id, title, ima
         const isSelected = selectedItems.some(
             (item) =>
                 item[0] === imdb_id &&
-                item[1] === title &&
-                item[2] === image_type
+                item[1] === title
         );
         setSelected(isSelected);
-    }, [selectedItems, image_type, imdb_id, title])
+    }, [selectedItems, imdb_id, title])
 
 
     return (
@@ -35,7 +32,7 @@ const ItemPreferenceCard: React.FC<PreferenceItemProps> = ({ imdb_id, title, ima
             onMouseEnter={() => setItemIsHovered(true)}
             onClick={() => {
                 if (!selected) {
-                    handleItemClick([imdb_id, title, image_type]);
+                    handleItemClick([imdb_id, title]);
                 }
             }}
         >
@@ -59,7 +56,7 @@ const ItemPreferenceCard: React.FC<PreferenceItemProps> = ({ imdb_id, title, ima
                         className={`flex h-[3rem] w-[3rem] ${iconIsHovered ? 'bg-[#b20811] border-[#b20811]' : 'bg-[#E50914] border-[#E50914]'} border-[0.13em] rounded-full items-center justify-center cursor-pointer transition-colors`}
                         onMouseLeave={() => setIconIsHovered(false)}
                         onMouseEnter={() => setIconIsHovered(true)}
-                        onClick={() => handleItemClick([imdb_id, title, image_type])}
+                        onClick={() => handleItemClick([imdb_id, title])}
                     >
                         <i className={`fas ${iconIsHovered ? 'fa-x' : 'fa-check'}`}/>
                     </div>

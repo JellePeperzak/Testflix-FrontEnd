@@ -1,12 +1,6 @@
 import jsonData from './preferences.json' assert { type: 'json' };
+import { ItemProps } from '../components/items/ItemCard';
 
-interface PreferenceItemData {
-    imdb_id: string;
-    title: string;
-    image_type: string;
-    [key: string]: any;    
-}
-
-const preferenceItems: PreferenceItemData[] = jsonData
+const preferenceItems: ItemProps[] = jsonData
 
 export default preferenceItems;

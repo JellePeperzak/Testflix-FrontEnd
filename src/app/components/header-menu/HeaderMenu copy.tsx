@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { usePageContext} from '@/app/context/PageTypeContext'
 import { useState, useEffect, useRef, ChangeEvent } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import { useTaskContext } from '@/app/context/TaskContext'
 import { useSearchQueryContext } from '@/app/context/SearchQueryContext'
 
@@ -85,24 +86,19 @@ const HeaderMenu: React.FC = () => {
 */
 function SearchBar() {
     const [searchBarFocus, setSearchBarFocus] = useState(false);
+    const [initialUrl, setInitialUrl] = useState("");
     const [searchPage, setSearchPage] = useState(false);
 
-    const {searchQuery, initialUrl, setSearchQuery, setInitialUrl} = useSearchQueryContext();
+    const {searchQuery, setSearchQuery} = useSearchQueryContext();
+
+    const searchParams = useSearchParams();
+    const urlVariable = searchParams.get('q');
 
     const searchBarRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
 
     const pathname = usePathname();
     const router = useRouter();
-
-    useEffect(() => {
-        if (searchQuery.length > 0) {
-            setSearchBarFocus(true);
-            if (inputRef.current) {
-                inputRef.current.focus();  // Focus the input element
-            }
-        }
-    }, [])
 
     useEffect(() => {
         const handleSearchButtonClickOutside = (event: MouseEvent) => {
@@ -112,33 +108,46 @@ function SearchBar() {
                 }  
             }
         };
+    
         document.addEventListener('mousedown', handleSearchButtonClickOutside);
+    
         return () => {
             document.removeEventListener('mousedown', handleSearchButtonClickOutside)
         }
     }, [searchPage]);
-    
+
     useEffect(() => {
-        if (searchQuery.length > 0 && !searchPage) {
-            if (pathname !== '/testflix/search') {
-                setInitialUrl(pathname)
-            }
-            setSearchPage(true)
-            router.push(`/testflix/search`)
+        if (!urlVariable && searchQuery) {
+            setSearchPage(false);
+            setSearchQuery("");
+            setInitialUrl("");
+            setSearchBarFocus(false);
+        } else if (urlVariable && !searchQuery){
+            setSearchBarFocus(true);
+            setSearchPage(true);
+            setSearchQuery(urlVariable);
         }
-
-        if (searchQuery.length === 0 && searchPage) {
-            setSearchPage(false)
-            if (initialUrl.length === 0) {
-                router.push('/testflix');
-            } else {
-                router.push(initialUrl);
-            }
-        }
-    }, [searchQuery])
-
+    }, [urlVariable, searchQuery])
+    
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setSearchQuery(e.target.value)
+        if (searchQuery.length === 0 && e.target.value.length > 0) {
+            setInitialUrl(pathname)
+            setSearchQuery(e.target.value);
+            router.push(`/testflix/search/?q=${e.target.value}`)
+            setSearchPage(true)
+        } else if (searchQuery.length > 0 && e.target.value.length !== 0) {
+            setSearchQuery(e.target.value);
+            router.push(`/testflix/search/?q=${e.target.value}`)
+        } else if (searchQuery.length !== 0 && e.target.value.length === 0) {
+            if (initialUrl.length === 0) {
+                setSearchQuery(e.target.value);
+                router.push('/testflix')
+            } else {
+                setSearchQuery(e.target.value);
+                router.push(initialUrl)
+            }
+            setSearchPage(false)
+        }
     };
 
     const handleSearchButtonClick = () => {
@@ -150,7 +159,13 @@ function SearchBar() {
 
     const handleDeleteButtonClick = () => {
         setSearchQuery("")
+        setSearchPage(false)
         setSearchBarFocus(false);
+        if (initialUrl.length === 0) {
+            router.push('/testflix')
+        } else {
+            router.push(initialUrl)
+        }
     }
 
     return (
