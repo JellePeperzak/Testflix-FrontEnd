@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef, useMemo, useCallback, Suspense } from "react"
 import { usePageContext } from "@/app/context/PageTypeContext"
-import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useCurrentAlgorithmContext } from "@/app/context/CurrentAlgorithmContext";
 import { useAlgorithm1Context } from '@/app/context/Algorithm1Context';
 import { useAlgorithm2Context } from '@/app/context/Algorithm2Context';
@@ -24,17 +24,7 @@ export default function TestFlixSearchPage() {
   const {dataToStore, setDataToStore} = useBackendDataContext();
   const {taskOrder, currentTaskIndex} = useTaskContext();
   const {algorithmOrder, currentAlgorithmIndex} = useCurrentAlgorithmContext();
-
-  const {searchQuery} = useSearchQueryContext();
-
-  const router = useRouter();
   
-  useEffect(() => {
-    // Check on first render if there is a search query. If not, return to the testflix home-page
-    if (!searchQuery) {
-      router.push('/testflix')
-    }
-  }, [])
   
   useEffect(() => {
     if (pageType != "Search") {
@@ -152,8 +142,6 @@ function SearchGrid({ filteredData, searchQuery }: SearchGridProps) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);  // Track the hovered item index
   const jumpDistance: number = useResponsiveJumpDistance();
 
-  const {initialUrl} = useSearchQueryContext();
-
   const zIndexState: number[] = useMemo(() => {
     return filteredData.map((_, index) => (index === hoveredIndex ? 50 : 0)); // Only set z-index to 30 when hovered
   }, [hoveredIndex, filteredData]); // Recompute when hoveredIndex changes
@@ -204,8 +192,6 @@ function SearchGrid({ filteredData, searchQuery }: SearchGridProps) {
           <div className="box-border p-0">
               <div className="mt-[1em] mx-0 mb-0 pt-[4%] min-h-[65px] pb-[0%]">
                       {/*START GRID ELEMENT*/}
-                      <p className="text-center">searchQuery length: {searchQuery ? searchQuery.length : 'null'}</p>
-                      <p className="text-center">initialUrl: {initialUrl ? initialUrl : 'null'}</p>
                       <h1 className='text-5xl px-[4%] tracking-tighter font-[500] font-["Verdana"]'>{`Search Results${searchQuery && ` For "${searchQuery}"`}`}</h1>
                       <div className="grid gap-y-[4vw] gap-x-0 mt-[10px] mx-[4%] mb-[10px] leading-[1.6] grid-search-media-dependend">
                           {filteredData.map((item, index) => (

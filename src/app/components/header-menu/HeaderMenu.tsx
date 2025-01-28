@@ -11,12 +11,18 @@ import { useSearchQueryContext } from '@/app/context/SearchQueryContext'
 const HeaderMenu: React.FC = () => {
     const { pageType, setPageType } = usePageContext();
     const { practiceTask, practiceError } = useTaskContext();
+    const { setSearchQuery} = useSearchQueryContext();
 
     const urlList = [
         {url: "/testflix", name: "Home"},
         {url: "/testflix/tvshows", name: "TV Shows"},
         {url: "/testflix/movies", name: "Movies"},
     ]
+
+    const handleHeaderMenuClick = (page: string) => {
+        setPageType(page)
+        setSearchQuery('')
+    }
 
 
     return (
@@ -26,7 +32,7 @@ const HeaderMenu: React.FC = () => {
                     <Link 
                         href={`/testflix${practiceTask ? '/practice' : ''}`}
                         className="inline-block align-middle mr-header-logo "
-                        onClick={() => setPageType("Home")}
+                        onClick={() => handleHeaderMenuClick("Home")}
                     >
                         <Image 
                             src={"/logo.svg"}
@@ -53,7 +59,7 @@ const HeaderMenu: React.FC = () => {
                                             key={`${urlObject.name}${index}`}    
                                             href={urlObject.url}
                                             className="flex relative items-center text-[#e5e5e5] h-full transition-text-header-menu hover:text-[#b3b3b3] focus:text-[#b3b3b3]"
-                                            onClick={() => setPageType(urlObject.name)}
+                                            onClick={() => handleHeaderMenuClick(urlObject.name)}
                                         >
                                             {urlObject.name}
                                         </Link>
@@ -85,9 +91,10 @@ const HeaderMenu: React.FC = () => {
 */
 function SearchBar() {
     const [searchBarFocus, setSearchBarFocus] = useState(false);
+    const [initialUrl, setInitialUrl] = useState("");
     const [searchPage, setSearchPage] = useState(false);
 
-    const {searchQuery, initialUrl, setSearchQuery, setInitialUrl} = useSearchQueryContext();
+    const {searchQuery, setSearchQuery} = useSearchQueryContext();
 
     const searchBarRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
@@ -95,14 +102,7 @@ function SearchBar() {
     const pathname = usePathname();
     const router = useRouter();
 
-    useEffect(() => {
-        if (searchQuery.length > 0) {
-            setSearchBarFocus(true);
-            if (inputRef.current) {
-                inputRef.current.focus();  // Focus the input element
-            }
-        }
-    }, [])
+    
 
     useEffect(() => {
         const handleSearchButtonClickOutside = (event: MouseEvent) => {
@@ -112,33 +112,42 @@ function SearchBar() {
                 }  
             }
         };
+    
         document.addEventListener('mousedown', handleSearchButtonClickOutside);
+    
         return () => {
             document.removeEventListener('mousedown', handleSearchButtonClickOutside)
         }
     }, [searchPage]);
-    
+
     useEffect(() => {
-        if (searchQuery.length > 0 && !searchPage) {
-            if (pathname !== '/testflix/search') {
-                setInitialUrl(pathname)
-            }
+        if (searchQuery) {
+            setSearchBarFocus(true)
             setSearchPage(true)
-            router.push(`/testflix/search`)
         }
-
-        if (searchQuery.length === 0 && searchPage) {
-            setSearchPage(false)
-            if (initialUrl.length === 0) {
-                router.push('/testflix');
-            } else {
-                router.push(initialUrl);
-            }
-        }
-    }, [searchQuery])
-
+    }, [])
+    
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         setSearchQuery(e.target.value)
+
+        if (searchQuery.length === 0 && e.target.value.length > 0) {
+            setInitialUrl(pathname)
+            setSearchQuery(e.target.value);
+            router.push(`/testflix/search/?q=${e.target.value}`)
+            setSearchPage(true)
+        } else if (searchQuery.length > 0 && e.target.value.length !== 0) {
+            setSearchQuery(e.target.value);
+            router.push(`/testflix/search/?q=${e.target.value}`)
+        } else if (searchQuery.length !== 0 && e.target.value.length === 0) {
+            if (initialUrl.length === 0) {
+                setSearchQuery(e.target.value);
+                router.push('/testflix')
+            } else {
+                setSearchQuery(e.target.value);
+                router.push(initialUrl)
+            }
+            setSearchPage(false)
+        }
     };
 
     const handleSearchButtonClick = () => {
@@ -150,7 +159,13 @@ function SearchBar() {
 
     const handleDeleteButtonClick = () => {
         setSearchQuery("")
+        setSearchPage(false)
         setSearchBarFocus(false);
+        if (initialUrl.length === 0) {
+            router.push('/testflix')
+        } else {
+            router.push(initialUrl)
+        }
     }
 
     return (

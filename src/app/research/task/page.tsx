@@ -7,6 +7,7 @@ import '@fortawesome/fontawesome-free/css/all.css';
 import { useTaskContext } from "@/app/context/TaskContext"
 import { useBackendDataContext } from "@/app/context/BackendDataContext"
 import { usePageContext } from "@/app/context/PageTypeContext";
+import { useSearchQueryContext } from "@/app/context/SearchQueryContext";
 
 import LayoutResearch from "../layout/LayoutResearch";
 
@@ -14,6 +15,7 @@ export default function TaskPage() {
     const {taskOrder, currentTaskIndex, taskDescriptions, practiceTask, setPracticeTask} = useTaskContext();
     const {dataToStore, setDataToStore} = useBackendDataContext();
     const {pageType, setPageType} = usePageContext();
+    const {setSearchQuery} = useSearchQueryContext();
 
     const router = useRouter();
 
@@ -29,6 +31,7 @@ export default function TaskPage() {
 
     const handleButtonClick = () => {
         const currentTime = Date.now()
+        setSearchQuery('')
         switch (taskOrder[currentTaskIndex]) {
             case 1:
                 setPageType("Home")
