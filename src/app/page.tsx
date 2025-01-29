@@ -55,7 +55,7 @@ export default function Home () {
           </p>
           <ul>
             <li>A laptop or desktop {"("}i.e. NO phones or tablets{")"}</li>
-            <li>Enough time to complete the full study in one go {"("}Roughly 10-15 minutes{")"}</li>
+            <li>Enough time to complete the full study in one go {"("}Up to 10 minutes{")"}</li>
           </ul>
           
         </div>
@@ -63,9 +63,6 @@ export default function Home () {
         <div className="section-text-research">
           <h2>What is the goal of this study?</h2>
           <p>
-            Watching series and movies on video streaming services such as Netflix and Disney+ has quickly become a popular way for people to spend 
-            their free time. While a lot of research has gone into developing objective evaluation methods to determine the quality of these services,
-            there are very few studies that include the experience of the user in these evaluation methods. 
             My study aims to improve the understanding of the relationship between user experience and the quality of service in the context of 
             video streaming services. 
           </p>
