@@ -95,7 +95,7 @@ export default function ThankyouPage() {
                             className="w-fit bg-black text-[#E50914] text-[125%] font-bold px-[1em] py-[0.5em] mt-[1em] rounded-lg"
                             onClick={handleFeedbackSubmit}
                         >
-                            CONTINUE
+                            SUBMIT
                         </button>
                     </div>
                     
